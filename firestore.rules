@@ -1,0 +1,27 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.admin == true;
+    }
+
+    match /users/{uid} {
+      // You can read your own profile; admins can read (and list) everyone.
+      allow read: if request.auth != null && (request.auth.uid == uid || isAdmin());
+
+      // Anyone signed in can create THEIR OWN profile, but it must start
+      // unverified, non-admin, unbanned, and as a Recruit.
+      allow create: if request.auth != null
+        && request.auth.uid == uid
+        && request.resource.data.verified == false
+        && request.resource.data.admin == false
+        && request.resource.data.banned == false
+        && request.resource.data.rank == "Recruit";
+
+      // Only admins can change accounts (verify, rank up, ban...).
+      allow update, delete: if isAdmin();
+    }
+  }
+}
