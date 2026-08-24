@@ -6,13 +6,15 @@
     <title>ETOG | Elite Tactical Operations Group</title>
     <style>
         :root {
-            --bg-color: #0d0f12;
-            --panel-bg: #14181f;
+            --bg-color: #06080b;
+            --panel-bg: #0b0f15;
+            --box-inner: #07090d;
             --accent-color: #00ff66;
-            --accent-dim: #00993d;
-            --text-color: #e2e8f0;
-            --text-muted: #94a3b8;
-            --border-color: #1e293b;
+            --accent-dim: #008f39;
+            --accent-glow: rgba(0, 255, 102, 0.15);
+            --text-color: #e6edf3;
+            --text-muted: #8b9bb4;
+            --border-color: #161b22;
         }
 
         * {
@@ -27,6 +29,10 @@
             color: var(--text-color);
             line-height: 1.6;
             overflow-x: hidden;
+            background-image: 
+                linear-gradient(rgba(0, 255, 102, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 102, 0.02) 1px, transparent 1px);
+            background-size: 30px 30px;
         }
 
         .wrapper {
@@ -35,32 +41,48 @@
             padding: 40px 20px;
         }
 
+        /* Tactical Header Styling */
         header {
             text-align: center;
             padding: 60px 20px;
-            background: linear-gradient(180deg, #16221a 0%, var(--panel-bg) 100%);
+            background: linear-gradient(180deg, #091a10 0%, var(--panel-bg) 100%);
             border: 1px solid var(--border-color);
             border-bottom: 3px solid var(--accent-color);
             border-radius: 8px;
             margin-bottom: 40px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255,255,255,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "SECURE_FACILITY_PROTOCOL";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 0.65rem;
+            color: var(--accent-dim);
+            font-family: monospace;
+            letter-spacing: 2px;
         }
 
         header h1 {
-            font-size: 2.5rem;
-            letter-spacing: 2px;
+            font-size: 2.8rem;
+            letter-spacing: 3px;
             color: #ffffff;
             margin-bottom: 10px;
             text-transform: uppercase;
+            text-shadow: 0 0 20px var(--accent-glow);
         }
 
         header .tagline {
             font-size: 1.1rem;
             color: var(--accent-color);
             font-style: italic;
-            font-weight: 600;
-            letter-spacing: 1px;
-            margin-bottom: 20px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
         }
 
         header p {
@@ -70,23 +92,26 @@
             font-size: 1.05rem;
         }
 
+        /* Section Layout Based Directly on Your Reference Image */
         section {
             background-color: var(--panel-bg);
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 30px;
             margin-bottom: 40px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
+        /* Clean Header matching your visual reference precisely */
         section h2 {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             color: #ffffff;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             border-left: 4px solid var(--accent-color);
-            padding-left: 12px;
+            padding-left: 14px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
+            font-weight: 700;
         }
 
         ul {
@@ -94,17 +119,19 @@
         }
 
         li {
-            margin-bottom: 12px;
+            margin-bottom: 14px;
             position: relative;
-            padding-left: 20px;
+            padding-left: 24px;
+            font-size: 1.05rem;
         }
 
         li::before {
-            content: "▪";
+            content: "▶";
             color: var(--accent-color);
             position: absolute;
             left: 0;
-            top: 0;
+            top: 2px;
+            font-size: 0.8rem;
         }
 
         .highlight {
@@ -112,6 +139,7 @@
             font-weight: 600;
         }
 
+        /* Roster Elements Matched to Visual Reference */
         .rank-container {
             display: grid;
             grid-template-columns: 1fr;
@@ -128,45 +156,59 @@
         }
 
         .rank-box {
-            background-color: #0b0d10;
+            background-color: var(--box-inner);
             border: 1px solid var(--border-color);
             border-radius: 6px;
-            padding: 20px;
+            padding: 24px;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.8);
         }
 
         .rank-box h3 {
             color: var(--accent-color);
-            margin-bottom: 12px;
-            font-size: 1.2rem;
+            margin-bottom: 16px;
+            font-size: 1.1rem;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 6px;
+            letter-spacing: 1px;
+            font-weight: 700;
+            border-bottom: 1px solid #1f2631;
+            padding-bottom: 8px;
+        }
+
+        .excellence-box h3 {
+            color: #ffaa00 !important;
         }
 
         .rank-sub-list li {
-            font-size: 0.95rem;
-            margin-bottom: 8px;
+            font-size: 1rem;
+            margin-bottom: 10px;
         }
 
-        .apply-section {
-            text-align: center;
-            background: linear-gradient(135deg, var(--panel-bg) 0%, #111a14 100%);
-            border: 2px dashed var(--accent-dim);
+        /* Dynamic Google Forms Frame Integration */
+        .form-frame-container {
+            position: relative;
+            width: 100%;
+            height: 700px;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            background: #ffffff;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
         }
 
-        .apply-section p {
-            color: var(--text-muted);
-            margin-bottom: 25px;
-            font-size: 1.1rem;
+        .form-frame-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
         }
 
+        /* Dynamic Visual Button Grouping */
         .btn-container {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 20px;
             align-items: center;
             justify-content: center;
+            margin-bottom: 30px;
         }
 
         @media (min-width: 600px) {
@@ -182,37 +224,42 @@
             text-decoration: none;
             font-weight: 700;
             font-size: 1.1rem;
-            padding: 15px 30px;
+            padding: 16px 36px;
             border-radius: 4px;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: background 0.2s ease, transform 0.1s ease;
-            box-shadow: 0 4px 15px rgba(0, 255, 102, 0.2);
+            letter-spacing: 1.5px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 20px rgba(0, 255, 102, 0.25);
+            text-align: center;
+            min-width: 240px;
         }
 
         .btn-apply:hover {
             background-color: #26ff7c;
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(0, 255, 102, 0.4);
         }
 
         .btn-group {
-            background-color: #1e293b;
+            background-color: #161b22;
             color: #ffffff;
-            border: 1px solid #475569;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid #30363d;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
         }
 
         .btn-group:hover {
-            background-color: #334155;
-            transform: translateY(-2px);
+            background-color: #21262d;
+            border-color: #8b9bb4;
+            color: #ffffff;
         }
 
         footer {
             text-align: center;
-            color: #475569;
+            color: #485465;
             font-size: 0.85rem;
             margin-top: 60px;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
+            font-family: monospace;
         }
     </style>
 </head>
@@ -230,10 +277,10 @@
         <!-- RECRUITMENT REQUIREMENTS -->
         <section>
             <h2>Recruitment Requirements</h2>
-            <p style="margin-bottom: 20px; color: var(--text-muted);">To join the ranks of ETOG, you must successfully complete one of the two clear vetting paths:</p>
+            <p style="margin-bottom: 24px; color: var(--text-muted); font-size: 1.05rem;">To join the ranks of ETOG, you must successfully complete one of the two clear vetting paths:</p>
             
-            <div style="margin-bottom: 25px;">
-                <h3 style="color: #ffffff; font-size: 1.15rem; margin-bottom: 10px;">Path 1: The Veteran Merit Route</h3>
+            <div style="margin-bottom: 30px;">
+                <h3 style="color: #ffffff; font-size: 1.2rem; margin-bottom: 12px; font-weight: 700; letter-spacing: 0.5px;">Path 1: The Veteran Merit Route</h3>
                 <ul>
                     <li><span class="highlight">Role Check:</span> Must actively have the official in-game TRT Commander role unlocked.</li>
                     <li><span class="highlight">XP Milestone:</span> Must possess a minimum of 500,000 global XP combined across all plant roles.</li>
@@ -243,35 +290,8 @@
             </div>
 
             <div>
-                <h3 style="color: #ffffff; font-size: 1.15rem; margin-bottom: 10px;">Path 2: The Commander's Exception</h3>
+                <h3 style="color: #ffffff; font-size: 1.2rem; margin-bottom: 12px; font-weight: 700; letter-spacing: 0.5px;">Path 2: The Commander's Exception</h3>
                 <ul>
                     <li><span class="highlight">Selection:</span> Must be handselected directly by the Head of ETOG.</li>
                     <li><span class="highlight">The Endurance Shift:</span> Must complete a continuous 1-hour monitored combat shift.</li>
                     <li><span class="highlight">Combat Ratio:</span> Must maintain a definitive Kill-to-Death (K:D) ratio of 10:5 or higher.</li>
-                    <li><span class="highlight">Death Exemption Clause:</span> Deaths only count if they occur during direct, active combat. Combat records are wiped of deaths caused by vehicle glitches, runaway vehicles, or a West Noobian randomly popping out with a T3 weapon.</li>
-                </ul>
-            </div>
-        </section>
-
-        <!-- SHIFTS & SCHEDULES -->
-        <section>
-            <h2>Shift Operations & Schedules</h2>
-            <ul>
-                <li><span class="highlight">No Scheduled Shifts:</span> ETOG operates on a state of constant readiness. There are no mandatory calendar times or forced group shifts. Members log on and secure the plant whenever they wish.</li>
-                <li><span class="highlight">Shift Progression:</span> To climb the ranks, players must voluntarily log performance metrics during sessions.</li>
-                <li><span class="highlight">15-Minute Shift Benchmark:</span> Must finish in the top 3 of the entire team OR secure at least 2 kills.</li>
-                <li><span class="highlight">30-Minute Shift Benchmark:</span> Must finish in the top 3 of the entire team OR secure at least 5 kills.</li>
-                <li><span class="highlight">1-Hour Shift Benchmark:</span> Must finish in the top 3 of the entire team OR secure at least 10 kills.</li>
-                <li><span class="highlight">Endurance Shift (1+ Hours):</span> Must maintain a strict average of at least 5 kills per hour, while keeping performance tight at a maximum of 5 combat deaths per hour (Standard exemption rules apply).</li>
-            </ul>
-        </section>
-
-        <!-- GROUP ROSTER STRUCTURE -->
-        <section>
-            <h2>Group Roster & Hierarchy</h2>
-            <div class="rank-container">
-                
-                <!-- Head Command -->
-                <div class="rank-box full-width-rank">
-                    <h3>Supreme Command</h3>
-                    <ul class="rank-sub-list">
