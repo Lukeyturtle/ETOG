@@ -1,388 +1,486 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ETOG // Elite Tactical Operations Group</title>
-    <style>
-        :root {
-            --bg-deep: #06080b;
-            --bg-card: #0b0f15;
-            --text-main: #ffffff;
-            --text-sub: #8b9bb4;
-            --border-color: #161b22;
-            --accent-green: #00ff66;
-            --accent-amber: #ffaa00;
-            --font-mono: 'Courier New', Courier, monospace;
-            --font-sans: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ETOG // Elite Tactical Operations Group</title>
+<style>
+  :root {
+    --bg-deep: #06080b;
+    --bg-panel: #0b0f15;
+    --border: #161b22;
+    --text-main: #ffffff;
+    --text-sub: #8b9bb4;
+    --accent: #00ff66;
+    --accent-dim: rgba(0, 255, 102, 0.12);
+    --amber: #ffb347;
+  }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        body {
-            background-color: var(--bg-deep);
-            color: var(--text-main);
-            font-family: var(--font-sans);
-            line-height: 1.6;
-            /* Subtle dark grid pattern */
-            background-image: 
-                linear-gradient(var(--border-color) 1px, transparent 1px),
-                linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
-            background-size: 30px 30px;
-            background-position: center;
-            padding: 2rem;
-            display: flex;
-            justify-content: center;
-        }
+  html { scroll-behavior: smooth; }
 
-        .container {
-            max-width: 1000px;
-            width: 100%;
-            background-color: rgba(6, 8, 11, 0.95); /* Slight transparency to show grid */
-            border: 1px solid var(--border-color);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            border-radius: 8px;
-            overflow: hidden;
-        }
+  body {
+    background-color: var(--bg-deep);
+    background-image:
+      linear-gradient(rgba(0, 255, 102, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 255, 102, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    color: var(--text-main);
+    font-family: "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
 
-        /* --- HEADER SECTION --- */
-        .header {
-            text-align: center;
-            padding: 4rem 2rem;
-            background: linear-gradient(180deg, rgba(11, 15, 21, 1) 0%, rgba(6, 8, 11, 1) 100%);
-            border-bottom: 2px solid var(--border-color);
-            position: relative;
-        }
+  .wrapper {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 20px 60px;
+  }
 
-        .header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background-color: var(--accent-green);
-            box-shadow: 0 0 15px var(--accent-green);
-        }
+  /* ---------- HEADER ---------- */
+  header {
+    background: linear-gradient(180deg, var(--bg-panel) 0%, rgba(11, 15, 21, 0.85) 100%);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
+    border-radius: 10px;
+    padding: 48px 40px;
+    margin-bottom: 32px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55), 0 0 30px rgba(0, 255, 102, 0.05);
+    position: relative;
+    overflow: hidden;
+  }
 
-        .header h1 {
-            font-family: var(--font-mono);
-            font-size: 3rem;
-            letter-spacing: 2px;
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
-        }
+  header::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0.6;
+  }
 
-        .tagline {
-            color: var(--accent-green);
-            font-family: var(--font-mono);
-            font-size: 1.1rem;
-            letter-spacing: 4px;
-            margin-bottom: 2rem;
-            text-shadow: 0 0 5px rgba(0, 255, 102, 0.3);
-        }
+  header h1 {
+    font-size: 2.2rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 800;
+  }
 
-        .description {
-            color: var(--text-sub);
-            max-width: 800px;
-            margin: 0 auto;
-            font-size: 1.05rem;
-        }
+  .tagline {
+    display: inline-block;
+    margin: 14px 0 20px;
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+    color: var(--accent);
+    background: var(--accent-dim);
+    border: 1px solid rgba(0, 255, 102, 0.35);
+    border-radius: 4px;
+    font-family: "Consolas", "SF Mono", "Courier New", monospace;
+  }
 
-        /* --- MAIN CONTENT SECTIONS --- */
-        .content {
-            padding: 3rem 2rem;
-        }
+  header p.desc {
+    color: var(--text-sub);
+    font-size: 1rem;
+    max-width: 760px;
+  }
 
-        .section {
-            margin-bottom: 3rem;
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 2rem;
-            position: relative;
-        }
+  /* ---------- SECTIONS ---------- */
+  section {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 36px 40px;
+    margin-bottom: 32px;
+    box-shadow: 0 10px 34px rgba(0, 0, 0, 0.5);
+  }
 
-        .section-title {
-            font-family: var(--font-mono);
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            padding-left: 1rem;
-            border-left: 4px solid var(--accent-green);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+  .section-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    border-left: 6px solid var(--accent);
+    padding-left: 16px;
+    margin-bottom: 8px;
+  }
 
-        h3 {
-            font-size: 1.3rem;
-            color: #ddd;
-            margin-bottom: 1rem;
-            margin-top: 1.5rem;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 0.5rem;
-        }
-        
-        .section h3:first-of-type {
-            margin-top: 0;
-        }
+  .section-sub {
+    color: var(--text-sub);
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding-left: 22px;
+    margin-bottom: 24px;
+    font-family: "Consolas", "SF Mono", "Courier New", monospace;
+  }
 
-        ul {
-            list-style-type: none;
-            padding-left: 0;
-        }
+  /* ---------- CARDS ---------- */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
 
-        li {
-            position: relative;
-            padding-left: 1.5rem;
-            margin-bottom: 0.8rem;
-            color: var(--text-sub);
-        }
+  .card {
+    background: var(--bg-deep);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+    transition: border-color 0.25s ease, transform 0.25s ease;
+  }
 
-        li::before {
-            content: '>';
-            position: absolute;
-            left: 0;
-            color: var(--accent-green);
-            font-family: var(--font-mono);
-            font-weight: bold;
-        }
+  .card:hover {
+    border-color: rgba(0, 255, 102, 0.4);
+    transform: translateY(-2px);
+  }
 
-        .highlight-amber {
-            color: var(--accent-amber);
-            font-weight: 600;
-        }
-        
-        .highlight-amber::before {
-            color: var(--accent-amber);
-        }
+  .card h3 {
+    font-size: 1.05rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+    color: var(--text-main);
+  }
 
-        /* --- NESTED BOXES (ROSTER) --- */
-        .roster-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-        }
+  .card h3 span.path-tag {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--accent);
+    letter-spacing: 2.5px;
+    margin-bottom: 6px;
+    font-family: "Consolas", "SF Mono", "Courier New", monospace;
+  }
 
-        .roster-box {
-            background-color: rgba(22, 27, 34, 0.5);
-            border: 1px solid var(--border-color);
-            padding: 1.5rem;
-            border-radius: 4px;
-        }
+  ul.tac-list { list-style: none; }
 
-        .roster-box h4 {
-            color: var(--text-main);
-            margin-bottom: 1rem;
-            font-family: var(--font-mono);
-            font-size: 1.1rem;
-        }
+  ul.tac-list li {
+    color: var(--text-sub);
+    font-size: 0.92rem;
+    padding: 8px 0 8px 22px;
+    position: relative;
+    border-bottom: 1px dashed rgba(22, 27, 34, 0.9);
+  }
 
-        /* --- BUTTONS --- */
-        .button-group {
-            display: flex;
-            gap: 1rem;
-            margin: 2rem 0;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
+  ul.tac-list li:last-child { border-bottom: none; }
 
-        .btn {
-            display: inline-block;
-            padding: 1rem 2rem;
-            background-color: transparent;
-            color: var(--text-main);
-            text-decoration: none;
-            font-family: var(--font-mono);
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border: 1px solid var(--accent-green);
-            border-radius: 4px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            text-align: center;
-        }
+  ul.tac-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 15px;
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    box-shadow: 0 0 8px rgba(0, 255, 102, 0.7);
+    border-radius: 2px;
+  }
 
-        .btn:hover {
-            background-color: rgba(0, 255, 102, 0.1);
-            box-shadow: 0 0 15px rgba(0, 255, 102, 0.3);
-            text-shadow: 0 0 5px rgba(0, 255, 102, 0.5);
-        }
+  ul.tac-list li strong { color: var(--text-main); }
 
-        .btn-primary {
-            background-color: rgba(0, 255, 102, 0.1);
-        }
+  /* ---------- ROSTER ---------- */
+  .roster-box {
+    background: var(--bg-deep);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 22px 24px;
+    margin-bottom: 18px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+  }
 
-        /* --- IFRAME CONTAINER --- */
-        .iframe-container {
-            width: 100%;
-            height: 600px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            margin-top: 2rem;
-            background-color: #fff; /* White background usually required for forms to render correctly */
-            overflow: hidden;
-        }
+  .roster-box:last-child { margin-bottom: 0; }
 
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
+  .roster-box h3 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    color: var(--accent);
+    margin-bottom: 14px;
+    font-family: "Consolas", "SF Mono", "Courier New", monospace;
+  }
 
-        /* --- FOOTER --- */
-        .footer {
-            background-color: #040608;
-            padding: 1.5rem;
-            text-align: center;
-            border-top: 1px solid var(--border-color);
-            font-family: var(--font-mono);
-            font-size: 0.85rem;
-            color: #5a6b82;
-            letter-spacing: 1px;
-        }
+  .rank-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
 
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2rem;
-            }
-            .section {
-                padding: 1.5rem;
-            }
-            .button-group {
-                flex-direction: column;
-            }
-            .btn {
-                width: 100%;
-            }
-        }
-    </style>
+  .rank-chip {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 8px 16px;
+    font-size: 0.88rem;
+    color: var(--text-main);
+    letter-spacing: 0.5px;
+  }
+
+  .rank-chip.supreme {
+    border-color: rgba(0, 255, 102, 0.5);
+    color: var(--accent);
+    box-shadow: 0 0 14px rgba(0, 255, 102, 0.15);
+    font-weight: 700;
+  }
+
+  .rank-chip.amber {
+    border-color: rgba(255, 179, 71, 0.5);
+    color: var(--amber);
+    box-shadow: 0 0 14px rgba(255, 179, 71, 0.12);
+    font-weight: 600;
+  }
+
+  .rank-desc {
+    color: var(--text-sub);
+    font-size: 0.85rem;
+    margin-top: 4px;
+  }
+
+  .rank-entry { margin-bottom: 14px; }
+  .rank-entry:last-child { margin-bottom: 0; }
+
+  /* ---------- BUTTONS ---------- */
+  .cta-text {
+    color: var(--text-sub);
+    margin-bottom: 24px;
+    padding-left: 22px;
+  }
+
+  .btn-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+
+  .btn {
+    flex: 1 1 220px;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 16px 24px;
+    border-radius: 6px;
+    transition: all 0.25s ease;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #04140a;
+    border: 1px solid var(--accent);
+    box-shadow: 0 0 22px rgba(0, 255, 102, 0.35);
+  }
+
+  .btn-primary:hover {
+    background: #33ff85;
+    box-shadow: 0 0 34px rgba(0, 255, 102, 0.55);
+    transform: translateY(-2px);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid rgba(0, 255, 102, 0.5);
+  }
+
+  .btn-secondary:hover {
+    background: var(--accent-dim);
+    box-shadow: 0 0 22px rgba(0, 255, 102, 0.25);
+    transform: translateY(-2px);
+  }
+
+  /* ---------- IFRAME ---------- */
+  .form-container {
+    background: var(--bg-deep);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--accent);
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 10px 34px rgba(0, 0, 0, 0.5);
+  }
+
+  .form-container iframe {
+    width: 100%;
+    height: 720px;
+    border: none;
+    border-radius: 5px;
+    background: var(--bg-panel);
+    display: block;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer {
+    text-align: center;
+    padding: 28px 20px 10px;
+    color: var(--text-sub);
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    font-family: "Consolas", "SF Mono", "Courier New", monospace;
+  }
+
+  footer .status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    margin-right: 8px;
+    box-shadow: 0 0 10px rgba(0, 255, 102, 0.8);
+    animation: pulse 2s infinite;
+    vertical-align: middle;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+  }
+
+  @media (max-width: 640px) {
+    header, section { padding: 28px 22px; }
+    header h1 { font-size: 1.5rem; }
+    .form-container iframe { height: 600px; }
+  }
+</style>
 </head>
 <body>
+<div class="wrapper">
 
-    <div class="container">
-        
-        <!-- HEADER SECTION -->
-        <header class="header">
-            <h1>Elite Tactical Operations Group</h1>
-            <div class="tagline">ETOG // SECURING THE CORE, DOMINATING THE FIELD</div>
-            <p class="description">
-                ETOG is a premier, highly selective tactical community operating within the Naramo Nuclear Plant framework. We are a dedicated team of elite security combatants specialising in rapid response, perimeter defense, and absolute site lockdown. We operate entirely on player cooperation, merit, and high-tier tactical skill.
-            </p>
-        </header>
+  <!-- ============ HEADER ============ -->
+  <header>
+    <h1>Elite Tactical Operations Group</h1>
+    <div class="tagline">ETOG // SECURING THE CORE, DOMINATING THE FIELD</div>
+    <p class="desc">ETOG is a premier, highly selective tactical community operating within the Naramo Nuclear Plant framework. We are a dedicated team of elite security combatants specialising in rapid response, perimeter defense, and absolute site lockdown. We operate entirely on player cooperation, merit, and high-tier tactical skill.</p>
+  </header>
 
-        <div class="content">
-            
-            <!-- SECTION 1: RECRUITMENT REQUIREMENTS -->
-            <section class="section">
-                <h2 class="section-title">Recruitment Requirements</h2>
-                
-                <h3>Path 1: The Veteran Merit Route</h3>
-                <ul>
-                    <li><strong>Role Check:</strong> Must actively have the official in-game TRT Commander role unlocked.</li>
-                    <li><strong>XP Milestone:</strong> Must possess a minimum of 500,000 global XP combined across all plant roles.</li>
-                    <li><strong>The Recruit Test:</strong> Must achieve a passing grade on the entry exam.</li>
-                    <li><strong>The Evaluation Shift:</strong> Must complete a 30-minute monitored shift and finish placing in the Top 3 players out of the entire group present on the server.</li>
-                </ul>
+  <!-- ============ SECTION 1: RECRUITMENT ============ -->
+  <section>
+    <h2 class="section-title">Recruitment Requirements</h2>
+    <p class="section-sub">// two vetting paths — clearance required</p>
+    <div class="card-grid">
+      <div class="card">
+        <h3><span class="path-tag">PATH 01</span>The Veteran Merit Route</h3>
+        <ul class="tac-list">
+          <li><strong>Role Check:</strong> Must actively have the official in-game TRT Commander role unlocked.</li>
+          <li><strong>XP Milestone:</strong> Must possess a minimum of 500,000 global XP combined across all plant roles.</li>
+          <li><strong>The Recruit Test:</strong> Must achieve a passing grade on the entry exam.</li>
+          <li><strong>The Evaluation Shift:</strong> Must complete a 30-minute monitored shift and finish placing in the Top 3 players out of the entire group present on the server.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="path-tag">PATH 02</span>The Commander's Exception</h3>
+        <ul class="tac-list">
+          <li><strong>Selection:</strong> Must be handselected directly by the Head of ETOG.</li>
+          <li><strong>The Endurance Shift:</strong> Must complete a continuous 1-hour monitored combat shift.</li>
+          <li><strong>Combat Ratio:</strong> Must maintain a definitive Kill-to-Death (K:D) ratio of 10:5 or higher.</li>
+          <li><strong>Death Exemption Clause:</strong> Deaths only count if they occur during direct, active combat. Combat records are wiped of deaths caused by vehicle glitches, runaway vehicles, or a West Noobian randomly popping out with a T3 weapon.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
 
-                <h3>Path 2: The Commander's Exception</h3>
-                <ul>
-                    <li><strong>Selection:</strong> Must be handselected directly by the Head of ETOG.</li>
-                    <li><strong>The Endurance Shift:</strong> Must complete a continuous 1-hour monitored combat shift.</li>
-                    <li><strong>Combat Ratio:</strong> Must maintain a definitive Kill-to-Death (K:D) ratio of 10:5 or higher.</li>
-                    <li><strong>Death Exemption Clause:</strong> Deaths only count if they occur during direct, active combat. Combat records are wiped of deaths caused by vehicle glitches, runaway vehicles, or a West Noobian randomly popping out with a T3 weapon.</li>
-                </ul>
-            </section>
+  <!-- ============ SECTION 2: SHIFT OPERATIONS ============ -->
+  <section>
+    <h2 class="section-title">Shift Operations &amp; Schedules</h2>
+    <p class="section-sub">// constant readiness protocol</p>
+    <div class="card-grid">
+      <div class="card">
+        <h3>Operational Doctrine</h3>
+        <ul class="tac-list">
+          <li><strong>No Scheduled Shifts:</strong> ETOG operates on a state of constant readiness. There are no mandatory calendar times or forced group shifts. Members log on and secure the plant whenever they wish.</li>
+          <li><strong>Shift Progression:</strong> To climb the ranks, players must voluntarily log performance metrics during sessions.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Performance Benchmarks</h3>
+        <ul class="tac-list">
+          <li><strong>15-Minute Shift Benchmark:</strong> Must finish in the top 3 of the entire team OR secure at least 2 kills.</li>
+          <li><strong>30-Minute Shift Benchmark:</strong> Must finish in the top 3 of the entire team OR secure at least 5 kills.</li>
+          <li><strong>1-Hour Shift Benchmark:</strong> Must finish in the top 3 of the entire team OR secure at least 10 kills.</li>
+          <li><strong>Endurance Shift (1+ Hours):</strong> Must maintain a strict average of at least 5 kills per hour, while keeping performance tight at a maximum of 5 combat deaths per hour (Standard exemption rules apply).</li>
+        </ul>
+      </div>
+    </div>
+  </section>
 
-            <!-- SECTION 2: SHIFT OPERATIONS & SCHEDULES -->
-            <section class="section">
-                <h2 class="section-title">Shift Operations & Schedules</h2>
-                <ul>
-                    <li><strong>No Scheduled Shifts:</strong> ETOG operates on a state of constant readiness. There are no mandatory calendar times or forced group shifts. Members log on and secure the plant whenever they wish.</li>
-                    <li><strong>Shift Progression:</strong> To climb the ranks, players must voluntarily log performance metrics during sessions.</li>
-                    <li><strong>15-Minute Shift Benchmark:</strong> Must finish in the top 3 of the entire team OR secure at least 2 kills.</li>
-                    <li><strong>30-Minute Shift Benchmark:</strong> Must finish in the top 3 of the entire team OR secure at least 5 kills.</li>
-                    <li><strong>1-Hour Shift Benchmark:</strong> Must finish in the top 3 of the entire team OR secure at least 10 kills.</li>
-                    <li><strong>Endurance Shift (1+ Hours):</strong> Must maintain a strict average of at least 5 kills per hour, while keeping performance tight at a maximum of 5 combat deaths per hour (Standard exemption rules apply).</li>
-                </ul>
-            </section>
+  <!-- ============ SECTION 3: ROSTER ============ -->
+  <section>
+    <h2 class="section-title">Group Roster &amp; Hierarchy</h2>
+    <p class="section-sub">// chain of command — structure verified</p>
 
-            <!-- SECTION 3: GROUP ROSTER & HIERARCHY -->
-            <section class="section">
-                <h2 class="section-title">Group Roster & Hierarchy</h2>
-                
-                <div class="roster-box" style="margin-bottom: 1.5rem; text-align: center;">
-                    <h4>Supreme Command</h4>
-                    <p style="color: var(--text-sub);">Head of ETOG (Faction Overseer and Supreme Leader)</p>
-                </div>
-
-                <div class="roster-grid">
-                    <div class="roster-box">
-                        <h4 class="highlight-amber">Competitive Excellence</h4>
-                        <ul>
-                            <li class="highlight-amber">Head of Grouped Operations - Earned by the top-performing team leader.</li>
-                            <li class="highlight-amber">Head of Solo Operations - Earned by the most lethal independent operator.</li>
-                        </ul>
-                    </div>
-
-                    <div class="roster-box">
-                        <h4>Grouped Operations Branch</h4>
-                        <ul>
-                            <li>Elite Commander</li>
-                            <li>Squad Commander</li>
-                            <li>Fireteam Leader</li>
-                        </ul>
-                    </div>
-
-                    <div class="roster-box">
-                        <h4>Solo Operations Branch</h4>
-                        <ul>
-                            <li>Elite Solo Commander</li>
-                            <li>Solo Commander</li>
-                            <li>Elite Solo Operator</li>
-                            <li>Solo Operator</li>
-                        </ul>
-                    </div>
-
-                    <div class="roster-box">
-                        <h4>Enlisted & Entry Personnel</h4>
-                        <ul>
-                            <li><strong>Operator</strong> - Official combat-ready asset. Reached immediately after passing initial recruitment.</li>
-                            <li><strong>Recruit</strong> - Applicants undergoing active shift evaluations or testing phases.</li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-
-            <!-- SECTION 4: SECURE ENTRY & APPLICATION -->
-            <section class="section">
-                <h2 class="section-title">Secure Entry & Application</h2>
-                <p style="text-align: center; color: var(--text-sub); margin-bottom: 1rem;">Complete your portal submission below to initiate the evaluation process.</p>
-                
-                <div class="button-group">
-                    <a href="https://google.com" target="_blank" class="btn btn-primary">Launch Form Externally</a>
-                    <a href="https://roblox.com" target="_blank" class="btn">Join Roblox Group</a>
-                </div>
-
-                <div class="iframe-container">
-                    <iframe src="https://google.com" title="ETOG Application Form"></iframe>
-                </div>
-            </section>
-
-        </div>
-
-        <!-- FOOTER -->
-        <footer class="footer">
-            // SYSTEM ACTIVE // OPERATING UNDER THE AUTHORITY OF TURTLES ARE BETTER THAN YURTLES // SECURITY DIVISION
-        </footer>
-
+    <div class="roster-box">
+      <h3>Supreme Command</h3>
+      <div class="rank-row">
+        <span class="rank-chip supreme">Head of ETOG</span>
+      </div>
+      <p class="rank-desc">Faction Overseer and Supreme Leader</p>
     </div>
 
-</body>
-</html>
+    <div class="roster-box">
+      <h3>Competitive Excellence Roles</h3>
+      <div class="rank-entry">
+        <div class="rank-row"><span class="rank-chip amber">Head of Grouped Operations</span></div>
+        <p class="rank-desc">Earned by the top-performing team leader.</p>
+      </div>
+      <div class="rank-entry">
+        <div class="rank-row"><span class="rank-chip amber">Head of Solo Operations</span></div>
+        <p class="rank-desc">Earned by the most lethal independent operator.</p>
+      </div>
+    </div>
+
+    <div class="roster-box">
+      <h3>Grouped Operations Branch</h3>
+      <div class="rank-row">
+        <span class="rank-chip">Elite Commander</span>
+        <span class="rank-chip">Squad Commander</span>
+        <span class="rank-chip">Fireteam Leader</span>
+      </div>
+    </div>
+
+    <div class="roster-box">
+      <h3>Solo Operations Branch</h3>
+      <div class="rank-row">
+        <span class="rank-chip">Elite Solo Commander</span>
+        <span class="rank-chip">Solo Commander</span>
+        <span class="rank-chip">Elite Solo Operator</span>
+        <span class="rank-chip">Solo Operator</span>
+      </div>
+    </div>
+
+    <div class="roster-box">
+      <h3>Enlisted &amp; Entry Personnel</h3>
+      <div class="rank-entry">
+        <div class="rank-row"><span class="rank-chip">Operator</span></div>
+        <p class="rank-desc">Official combat-ready asset. Reached immediately after passing initial recruitment.</p>
+      </div>
+      <div class="rank-entry">
+        <div class="rank-row"><span class="rank-chip">Recruit</span></div>
+        <p class="rank-desc">Applicants undergoing active shift evaluations or testing phases.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SECTION 4: SECURE ENTRY ============ -->
+  <section>
+    <h2 class="section-title">Secure Entry &amp; Application</h2>
+    <p class="section-sub">// portal access — authorization pending</p>
+    <p class="cta-text">Ready to join the ranks? Complete your portal submission below. All applicants are processed through the secure entry system — submit your application to begin the evaluation protocol.</p>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="https://google.com" target="_blank" rel="noopener">Launch Form Externally</a>
+      <a class="btn btn-secondary" href="https://roblox.com" target="_blank" rel="noopener">Join Roblox Group</a>
+    </div>
+    <div class="form-container">
+      <iframe src="https://google.com" title="ETOG Application Form" loading="lazy">Loading secure application portal…</iframe>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer>
+    <span class="status-dot"></span>// SYSTEM ACTIVE // OPERATING UNDER THE AUTHORITY OF TURTLES ARE BETTER THAN YURTLES // SECURITY DIVISION
+  </footer>
+
+</div>
+
+
+</body></html>
