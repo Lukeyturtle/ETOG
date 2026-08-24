@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -82,6 +83,37 @@
     color: var(--text-sub);
     font-size: 1rem;
     max-width: 760px;
+  }
+
+  .portal-link {
+    position: absolute;
+    top: 22px;
+    right: 24px;
+    z-index: 2;
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.72rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-family: "Consolas", "SF Mono", "Courier New", monospace;
+    border: 1px solid rgba(0, 255, 102, 0.5);
+    border-radius: 4px;
+    padding: 8px 14px;
+    background: rgba(6, 8, 11, 0.6);
+    transition: all 0.25s ease;
+  }
+
+  .portal-link:hover {
+    background: var(--accent-dim);
+    box-shadow: 0 0 18px rgba(0, 255, 102, 0.25);
+  }
+
+  @media (max-width: 640px) {
+    .portal-link {
+      position: static;
+      display: inline-block;
+      margin-bottom: 16px;
+    }
   }
 
   /* ---------- SECTIONS ---------- */
@@ -349,6 +381,7 @@
 
   <!-- ============ HEADER ============ -->
   <header>
+    <a class="portal-link" href="portal.html">Member Portal &#9658;</a>
     <h1>Elite Tactical Operations Group</h1>
     <div class="tagline">E.T.O.G. // Tactically Responding</div>
     <p class="desc">ETOG is a elite, highly selective tactical subdivison and unoffical faction operating in the Roblox Game Naramo Nuclear Power Plant. ETOG consists of a dedicated team of elite security combatants specialising in rapid response, WN Defence, and tactical combat. We operate entirely on player cooperation, merit, and elite tactical skill.</p>

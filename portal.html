@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E.T.O.G. // Member Portal</title>
+<style>
+  :root {
+    --bg-deep: #06080b;
+    --bg-panel: #0b0f15;
+    --border: #161b22;
+    --text-main: #ffffff;
+    --text-sub: #8b9bb4;
+    --accent: #00ff66;
+    --accent-dim: rgba(0, 255, 102, 0.12);
+    --amber: #ffb347;
+    --alert: #ff4d5a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--bg-deep);
+    background-image:
+      linear-gradient(rgba(0, 255, 102, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 255, 102, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    color: var(--text-main);
+    font-family: "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .wrapper {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 20px 60px;
+  }
+
+  /* ---------- LOCK GATE ---------- */
+  #gate {
+    position: fixed;
+    inset: 0;
+    background-color: var(--bg-deep);
+    background-image:
+      linear-gradient(rgba(0, 255, 102, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 255, 102, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+  }
+
+  .gate-card {
+    width: 100%;
+    max-width: 420px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
+    border-radius: 10px;
+    padding: 40px 36px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 255, 102, 0.06);
+    text-align: center;
+  }
+
+  .gate-card.shake { animation: shake 0.4s ease; }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-10px); }
+    40% { transform: translateX(10px); }
+    60% { transform: translateX(-6px); }
+    80% { transform: translateX(6px); }
+  }
+
+  .gate-lock {
+    font-size: 2.2rem;
+    margin-bottom: 12px;
+  }
+
+  .gate-card h1 {
+    font-size: 1.15rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+
+  .gate-sub {
+    color: var(--text-sub);
+    font-size: 0.72rem;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    font-family: "Consolas", "SF Mono", "Courier New", monospace;
+    margin-bottom: 28px;
+  }
+
+  #pass-input {
+    width: 100%;
+    background: var(--bg-deep);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--accent);
+    font-family: "Consolas", "SF Mono", "Courier New", monospace;
+    font-size: 1.3rem;
+    letter-spacing: 8px;
+    text-align: center;
+    padding: 14px;
+    outline: none;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  #pass-input:focus {
+    border-color: rgba(0, 255, 102, 0.5);
+    box-shadow: 0 0 18px rgba(0, 255, 102, 0.15);
+  }
+
+  #gate-error {
+    color: var(--alert);
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-family: "Consolas", "SF Mono", "Courier New", monospace;
+    margin-top: 14px;
+    min-height: 1.2em;
+    visibility: hidden;
+  }
+
+  #gate-error.show { visibility: visible; }
+
+  .gate-btn {
+    width: 100%;
+    margin-top: 18px;
+    background: var(--accent);
+    color: #04140a;
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    padding: 14px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 0 22px rgba(0, 255, 102, 0.35);
+    transition: all 0.25s ease;
+    font-family: inherit;
+  }
+
+  .gate-btn:hover {
+    background: #33ff85;
+    box-shadow: 0 0 34px rgba(0, 255, 102, 0.55);
+  }
+
+  .gate-back {
+    display: inline-block;
+    margin-top: 22px;
+    color: var(--text-sub);
+    font-size: 0.72rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-family: "Consolas", "SF Mono", "Courier New", monospace;
+  }
+
+  .gate-back:hover { color: var(--accent); }
+
+  /* ---------- PORTAL ---------- */
+  #portal { display: none; }
+  #portal.unlocked { display: block; }
+
+  header {
+    background: linear-gradient(180deg, var(--bg-panel) 0%, rgba(11, 15, 21, 0.85) 100%);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
+    border-radius: 10px;
+    padding: 48px 40px;
+    margin-bottom: 32px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55), 0 0 30px rgba(0, 255, 102, 0.05);
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0.6;
+  }
+
+  header h1 {
+    font-size: 2rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 800;
+  }
+
+  .tagline {
+    display: inline-block;
+    margin: 14px 0 0;
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+    color: var(--accent);
+    background: var(--accent-dim);
+    border: 1px solid rgba(0, 255, 102, 0.35);
+    border-radius: 4px;
+    font-family: "Consolas", "SF Mono", "Courier New", monospace;
+  }
+
+  .header-actions {
+    position: absolute;
+    top: 22px;
+    right: 24px;
+    z-index: 2;
+    display: flex;
+    gap: 10px;
+  }
+
+  .mini-btn {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.72rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-family: "Consolas", "SF Mono", "Courier New", monospace;
+    border: 1px solid rgba(0, 255, 102, 0.5);
+    border-radius: 4px;
+    padding: 8px 14px;
+    background: rgba(6, 8, 11, 0.6);
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .mini-btn:hover {
+    background: var(--accent-dim);
+    box-shadow: 0 0 18px rgba(0, 255, 102, 0.25);
+  }
+
+  .mini-btn.logout {
+    color: var(--alert);
+    border-color: rgba(255, 77, 90, 0.5);
+  }
+
+  .mini-btn.logout:hover {
+    background: rgba(255, 77, 90, 0.12);
+    box-shadow: 0 0 18px rgba(255, 77, 90, 0.2);
+  }
+
+  @media (max-width: 640px) {
+    .header-actions {
+      position: static;
+      margin-bottom: 16px;
+    }
+  }
+
+  section {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 36px 40px;
+    margin-bottom: 32px;
+    box-shadow: 0 10px 34px rgba(0, 0, 0, 0.5);
+  }
+
+  .section-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    border-left: 6px solid var(--accent);
+    padding-left: 16px;
+    margin-bottom: 8px;
+  }
+
+  .section-sub {
+    color: var(--text-sub);
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding-left: 22px;
+    margin-bottom: 24px;
+    font-family: "Consolas", "SF Mono", "Courier New", monospace;
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  .card {
+    background: var(--bg-deep);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+    transition: border-color 0.25s ease, transform 0.25s ease;
+  }
+
+  .card:hover {
+    border-color: rgba(0, 255, 102, 0.4);
+    transform: translateY(-2px);
+  }
+
+  .card h3 {
+    font-size: 1.05rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+    color: var(--text-main);
+  }
+
+  ul.tac-list { list-style: none; }
+
+  ul.tac-list li {
+    color: var(--text-sub);
+    font-size: 0.92rem;
+    padding: 8px 0 8px 22px;
+    position: relative;
+    border-bottom: 1px dashed rgba(22, 27, 34, 0.9);
+  }
+
+  ul.tac-list li:last-child { border-bottom: none; }
+
+  ul.tac-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 15px;
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    box-shadow: 0 0 8px rgba(0, 255, 102, 0.7);
+    border-radius: 2px;
+  }
+
+  ul.tac-list li strong { color: var(--text-main); }
+
+  .cta-text {
+    color: var(--text-sub);
+    margin-bottom: 24px;
+    padding-left: 22px;
+  }
+
+  .btn-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+
+  .btn {
+    flex: 1 1 220px;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 16px 24px;
+    border-radius: 6px;
+    transition: all 0.25s ease;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #04140a;
+    border: 1px solid var(--accent);
+    box-shadow: 0 0 22px rgba(0, 255, 102, 0.35);
+  }
+
+  .btn-primary:hover {
+    background: #33ff85;
+    box-shadow: 0 0 34px rgba(0, 255, 102, 0.55);
+    transform: translateY(-2px);
+  }
+
+  .form-container {
+    background: var(--bg-deep);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--accent);
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 10px 34px rgba(0, 0, 0, 0.5);
+  }
+
+  .form-container iframe {
+    width: 100%;
+    height: 720px;
+    border: none;
+    border-radius: 5px;
+    background: var(--bg-panel);
+    display: block;
+  }
+
+  footer {
+    text-align: center;
+    padding: 28px 20px 10px;
+    color: var(--text-sub);
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    font-family: "Consolas", "SF Mono", "Courier New", monospace;
+  }
+
+  footer .status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    margin-right: 8px;
+    box-shadow: 0 0 10px rgba(0, 255, 102, 0.8);
+    animation: pulse 2s infinite;
+    vertical-align: middle;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+  }
+
+  @media (max-width: 640px) {
+    header, section { padding: 28px 22px; }
+    header h1 { font-size: 1.4rem; }
+    .form-container iframe { height: 600px; }
+    .gate-card { padding: 32px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ LOCK GATE ============ -->
+<div id="gate">
+  <div class="gate-card" id="gate-card">
+    <div class="gate-lock">&#128274;</div>
+    <h1>Restricted Access</h1>
+    <p class="gate-sub">// E.T.O.G. MEMBER PORTAL // AUTHORIZATION REQUIRED</p>
+    <input type="password" id="pass-input" inputmode="numeric" autocomplete="off" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;" aria-label="Access code">
+    <p id="gate-error">// ACCESS DENIED — INVALID CODE</p>
+    <button class="gate-btn" id="gate-btn" type="button">Authenticate</button>
+    <a class="gate-back" href="index.html">&#9668; Return to public site</a>
+  </div>
+</div>
+
+<!-- ============ PORTAL ============ -->
+<div id="portal">
+<div class="wrapper">
+
+  <header>
+    <div class="header-actions">
+      <a class="mini-btn" href="index.html">&#9668; Main Site</a>
+      <button class="mini-btn logout" id="logout-btn" type="button">Log Out</button>
+    </div>
+    <h1>E.T.O.G. Member Portal</h1>
+    <div class="tagline">// AUTHORIZED PERSONNEL ONLY // CLEARANCE GRANTED</div>
+  </header>
+
+  <section>
+    <h2 class="section-title">Operations Briefing</h2>
+    <p class="section-sub">// member intel — read before your shift</p>
+    <div class="card-grid">
+      <div class="card">
+        <h3>Shift Benchmarks</h3>
+        <ul class="tac-list">
+          <li><strong>15-Minute Shift:</strong> Top 3 of the entire team OR at least 2 kills.</li>
+          <li><strong>30-Minute Shift:</strong> Top 3 of the entire team OR at least 5 kills.</li>
+          <li><strong>1-Hour Shift:</strong> Top 3 of the entire team OR at least 10 kills.</li>
+          <li><strong>Endurance Shift (1+ Hours):</strong> Average at least 5 kills per hour with a maximum of 5 combat deaths per hour.</li>
+          <li><strong>Elite Promotions:</strong> Elite Solo Commander / Elite Commander require an endurance shift of at least 1:15 averaging 10 kills per hour.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Field Reminders</h3>
+        <ul class="tac-list">
+          <li><strong>Death Exemptions:</strong> Deaths from vehicles or WN camping are wiped from your combat record. Only direct, active combat deaths count.</li>
+          <li><strong>Constant Readiness:</strong> No scheduled shifts — log on and secure the plant whenever you wish.</li>
+          <li><strong>Log Everything:</strong> Shifts only count toward promotion if you record them. Submit your shift report immediately after your session ends.</li>
+          <li><strong>Honesty Protocol:</strong> Falsified shift reports result in removal from ETOG.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">Shift Recording</h2>
+    <p class="section-sub">// submit your performance metrics</p>
+    <p class="cta-text">Completed a shift? File your report below. Include your shift length, kills, deaths, and placement so command can process your rank progression.</p>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="https://forms.gle/mxREzrFaoTiiHXVE7" target="_blank" rel="noopener">Record Your Shift</a>
+    </div>
+    <div class="form-container">
+      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfz8FqwZBM5zaqqmTrJC3sFsv-hdldAxlfJoxI9T-Mh2IOaIQ/viewform?embedded=true" title="ETOG Shift Recording Form" loading="lazy">Loading shift recording form&#8230;</iframe>
+      <p style="color: var(--text-sub); font-size: 0.8rem; padding: 10px 6px 2px; text-align: center;">Form not loading? You need to be signed into Google — use the Record Your Shift button above instead.</p>
+    </div>
+  </section>
+
+  <footer>
+    <span class="status-dot"></span>// PORTAL SESSION ACTIVE // OPERATING UNDER THE AUTHORITY OF TURTLES ARE BETTER THAN YURTLES // SECURITY DIVISION
+  </footer>
+
+</div>
+</div>
+
+<script>
+(function () {
+  var ACCESS_HASH = "3ae6b07c443edcbd4759af49dc223c0f15e8c1eb6411e103b79f11f6a9460c91";
+  var STORE_KEY = "etog_clearance";
+
+  var gate = document.getElementById("gate");
+  var gateCard = document.getElementById("gate-card");
+  var input = document.getElementById("pass-input");
+  var errorMsg = document.getElementById("gate-error");
+  var authBtn = document.getElementById("gate-btn");
+  var portal = document.getElementById("portal");
+  var logoutBtn = document.getElementById("logout-btn");
+
+  function sha256(text) {
+    if (window.crypto && window.crypto.subtle) {
+      return window.crypto.subtle.digest("SHA-256", new TextEncoder().encode(text)).then(function (buf) {
+        return Array.prototype.map.call(new Uint8Array(buf), function (b) {
+          return b.toString(16).padStart(2, "0");
+        }).join("");
+      });
+    }
+    // Fallback for browsers without WebCrypto (older/file contexts)
+    return Promise.resolve(text === atob("MjU5MDE=") ? ACCESS_HASH : "");
+  }
+
+  function unlock() {
+    gate.style.display = "none";
+    portal.classList.add("unlocked");
+  }
+
+  function lock() {
+    try { sessionStorage.removeItem(STORE_KEY); } catch (e) {}
+    portal.classList.remove("unlocked");
+    gate.style.display = "flex";
+    input.value = "";
+    input.focus();
+  }
+
+  function attempt() {
+    sha256(input.value.trim()).then(function (hash) {
+      if (hash === ACCESS_HASH) {
+        try { sessionStorage.setItem(STORE_KEY, hash); } catch (e) {}
+        errorMsg.classList.remove("show");
+        unlock();
+      } else {
+        errorMsg.classList.add("show");
+        input.value = "";
+        gateCard.classList.remove("shake");
+        void gateCard.offsetWidth;
+        gateCard.classList.add("shake");
+        input.focus();
+      }
+    });
+  }
+
+  authBtn.addEventListener("click", attempt);
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") attempt();
+  });
+  logoutBtn.addEventListener("click", lock);
+
+  try {
+    if (sessionStorage.getItem(STORE_KEY) === ACCESS_HASH) unlock();
+  } catch (e) {}
+
+  if (!portal.classList.contains("unlocked")) input.focus();
+})();
+</script>
+
+</body>
+</html>
