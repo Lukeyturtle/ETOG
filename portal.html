@@ -13,8 +13,13 @@
     --text-sub: #8b9bb4;
     --accent: #00ff66;
     --accent-dim: rgba(0, 255, 102, 0.12);
+    --cyan: #00e0ff;
+    --cyan-dim: rgba(0, 224, 255, 0.12);
+    --blue: #4d7cff;
+    --blue-dim: rgba(77, 124, 255, 0.12);
     --amber: #ffb347;
     --alert: #ff4d5a;
+    --banner-h: 56px;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -25,28 +30,85 @@
     background-color: var(--bg-deep);
     background-image:
       linear-gradient(rgba(0, 255, 102, 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0, 255, 102, 0.03) 1px, transparent 1px);
+      linear-gradient(90deg, rgba(0, 224, 255, 0.025) 1px, transparent 1px);
     background-size: 40px 40px;
     color: var(--text-main);
     font-family: "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
     line-height: 1.6;
     min-height: 100vh;
+    padding-top: var(--banner-h);
   }
 
-  .wrapper {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 40px 20px 60px;
+  /* ---------- TOP BANNER ---------- */
+  .top-banner {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--banner-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 22px;
+    background: rgba(6, 8, 11, 0.88);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 500;
   }
 
-  /* ---------- FULLSCREEN GATE SCREENS ---------- */
+  .top-banner::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--cyan), var(--blue));
+    opacity: 0.7;
+  }
+
+  .brand {
+    font-family: "Consolas", "SF Mono", "Courier New", monospace;
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: 3px;
+    color: var(--text-main);
+  }
+
+  .brand .slashes { color: var(--cyan); }
+
+  .banner-links { display: flex; gap: 10px; }
+
+  .banner-btn {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.72rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-family: "Consolas", "SF Mono", "Courier New", monospace;
+    border: 1px solid rgba(0, 255, 102, 0.5);
+    padding: 8px 16px;
+    background: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .banner-btn:hover {
+    background: var(--accent-dim);
+    box-shadow: 0 0 18px rgba(0, 255, 102, 0.25);
+  }
+
+  .banner-btn.cyan { color: var(--cyan); border-color: rgba(0, 224, 255, 0.5); }
+  .banner-btn.cyan:hover { background: var(--cyan-dim); box-shadow: 0 0 18px rgba(0, 224, 255, 0.25); }
+
+  .banner-btn.logout { color: var(--alert); border-color: rgba(255, 77, 90, 0.5); display: none; }
+  .banner-btn.logout:hover { background: rgba(255, 77, 90, 0.12); box-shadow: 0 0 18px rgba(255, 77, 90, 0.2); }
+
+  /* ---------- FULLSCREEN OVERLAY SCREENS (gate / auth / hold) ---------- */
   .screen {
     position: fixed;
     inset: 0;
+    top: var(--banner-h);
     background-color: var(--bg-deep);
     background-image:
       linear-gradient(rgba(0, 255, 102, 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0, 255, 102, 0.03) 1px, transparent 1px);
+      linear-gradient(90deg, rgba(0, 224, 255, 0.025) 1px, transparent 1px);
     background-size: 40px 40px;
     display: none;
     align-items: center;
@@ -64,7 +126,6 @@
     background: var(--bg-panel);
     border: 1px solid var(--border);
     border-top: 3px solid var(--accent);
-    border-radius: 10px;
     padding: 40px 36px;
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 255, 102, 0.06);
     text-align: center;
@@ -103,7 +164,7 @@
     width: 100%;
     background: var(--bg-deep);
     border: 1px solid var(--border);
-    border-radius: 6px;
+    border-radius: 3px;
     color: var(--text-main);
     font-family: "Consolas", "SF Mono", "Courier New", monospace;
     font-size: 1rem;
@@ -116,8 +177,8 @@
   .field::placeholder { color: #3d4a5e; }
 
   .field:focus {
-    border-color: rgba(0, 255, 102, 0.5);
-    box-shadow: 0 0 18px rgba(0, 255, 102, 0.15);
+    border-color: rgba(0, 224, 255, 0.55);
+    box-shadow: 0 0 18px rgba(0, 224, 255, 0.15);
   }
 
   #pass-input {
@@ -143,7 +204,7 @@
     background: var(--accent);
     color: #04140a;
     border: 1px solid var(--accent);
-    border-radius: 6px;
+    border-radius: 3px;
     padding: 14px;
     font-size: 0.85rem;
     font-weight: 700;
@@ -176,20 +237,15 @@
     cursor: pointer;
   }
 
-  .gate-back:hover { color: var(--accent); }
+  .gate-back:hover { color: var(--cyan); }
 
-  /* auth tabs */
-  .auth-tabs {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 24px;
-  }
+  .auth-tabs { display: flex; gap: 8px; margin-bottom: 24px; }
 
   .auth-tab {
     flex: 1;
     background: var(--bg-deep);
     border: 1px solid var(--border);
-    border-radius: 6px;
+    border-radius: 3px;
     color: var(--text-sub);
     padding: 10px;
     font-size: 0.75rem;
@@ -201,9 +257,9 @@
   }
 
   .auth-tab.selected {
-    color: var(--accent);
-    border-color: rgba(0, 255, 102, 0.5);
-    background: var(--accent-dim);
+    color: var(--cyan);
+    border-color: rgba(0, 224, 255, 0.55);
+    background: var(--cyan-dim);
   }
 
   .auth-note {
@@ -221,128 +277,91 @@
     color: var(--amber);
     font-size: 0.78rem;
     border: 1px dashed rgba(255, 179, 71, 0.5);
-    border-radius: 6px;
     padding: 12px;
     margin-bottom: 18px;
     text-align: left;
   }
 
-  /* ---------- PORTAL ---------- */
+  /* ---------- DASHBOARD (full-screen sections) ---------- */
   #dashboard { display: none; }
   #dashboard.active { display: block; }
 
-  header {
-    background: linear-gradient(180deg, var(--bg-panel) 0%, rgba(11, 15, 21, 0.85) 100%);
-    border: 1px solid var(--border);
-    border-top: 3px solid var(--accent);
-    border-radius: 10px;
-    padding: 48px 40px;
-    margin-bottom: 32px;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55), 0 0 30px rgba(0, 255, 102, 0.05);
-    position: relative;
-    overflow: hidden;
+  .snap-sec {
+    min-height: calc(100vh - var(--banner-h));
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    scroll-margin-top: var(--banner-h);
+    --sec-accent: var(--accent);
+    --sec-accent-dim: var(--accent-dim);
   }
 
-  header::after {
-    content: "";
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--accent), transparent);
-    opacity: 0.6;
+  .snap-sec.acc-cyan { --sec-accent: var(--cyan); --sec-accent-dim: var(--cyan-dim); }
+  .snap-sec.acc-blue { --sec-accent: var(--blue); --sec-accent-dim: var(--blue-dim); }
+  .snap-sec.acc-amber { --sec-accent: var(--amber); --sec-accent-dim: rgba(255, 179, 71, 0.12); }
+
+  .snap-sec.tint { background: rgba(11, 15, 21, 0.55); }
+
+  .sec-inner {
+    margin: auto;
+    width: 100%;
+    max-width: 960px;
+    padding: 56px 24px;
   }
 
-  header h1 {
-    font-size: 2rem;
+  /* hero greeting */
+  .hero { position: relative; }
+  .hero .sec-inner { text-align: center; }
+
+  .hero h1 {
+    font-size: 2.8rem;
     letter-spacing: 2px;
     text-transform: uppercase;
     font-weight: 800;
+    line-height: 1.2;
   }
+
+  .hero h1 .hello-rank { color: var(--cyan); }
+  .hero h1 .hello-name { color: var(--accent); }
 
   .tagline {
     display: inline-block;
-    margin: 14px 0 0;
-    padding: 6px 14px;
+    margin: 20px 0 0;
+    padding: 7px 16px;
     font-size: 0.8rem;
     letter-spacing: 3px;
     color: var(--accent);
     background: var(--accent-dim);
     border: 1px solid rgba(0, 255, 102, 0.35);
-    border-radius: 4px;
     font-family: "Consolas", "SF Mono", "Courier New", monospace;
   }
 
-  .header-actions {
+  .scroll-hint {
     position: absolute;
-    top: 22px;
-    right: 24px;
-    z-index: 2;
-    display: flex;
-    gap: 10px;
-  }
-
-  .mini-btn {
-    color: var(--accent);
-    text-decoration: none;
-    font-size: 0.72rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
+    bottom: 26px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--cyan);
+    font-size: 0.7rem;
+    letter-spacing: 3px;
     font-family: "Consolas", "SF Mono", "Courier New", monospace;
-    border: 1px solid rgba(0, 255, 102, 0.5);
-    border-radius: 4px;
-    padding: 8px 14px;
-    background: rgba(6, 8, 11, 0.6);
-    cursor: pointer;
-    transition: all 0.25s ease;
+    animation: bob 2s infinite ease-in-out;
+    opacity: 0.8;
   }
 
-  .mini-btn:hover {
-    background: var(--accent-dim);
-    box-shadow: 0 0 18px rgba(0, 255, 102, 0.25);
-  }
-
-  .mini-btn.logout {
-    color: var(--alert);
-    border-color: rgba(255, 77, 90, 0.5);
-  }
-
-  .mini-btn.logout:hover {
-    background: rgba(255, 77, 90, 0.12);
-    box-shadow: 0 0 18px rgba(255, 77, 90, 0.2);
-  }
-
-  @media (max-width: 640px) {
-    .header-actions { position: static; margin-bottom: 16px; }
-  }
-
-  .id-card {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 12px;
-    margin-top: 20px;
-  }
-
-  section {
-    background: var(--bg-panel);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 36px 40px;
-    margin-bottom: 32px;
-    box-shadow: 0 10px 34px rgba(0, 0, 0, 0.5);
+  @keyframes bob {
+    0%, 100% { transform: translate(-50%, 0); }
+    50% { transform: translate(-50%, 8px); }
   }
 
   .section-title {
-    font-size: 1.35rem;
+    font-size: 1.5rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    border-left: 6px solid var(--accent);
+    border-left: 6px solid var(--sec-accent);
     padding-left: 16px;
     margin-bottom: 8px;
   }
-
-  .section-title.amber { border-left-color: var(--amber); }
 
   .section-sub {
     color: var(--text-sub);
@@ -350,27 +369,27 @@
     letter-spacing: 2px;
     text-transform: uppercase;
     padding-left: 22px;
-    margin-bottom: 24px;
+    margin-bottom: 28px;
     font-family: "Consolas", "SF Mono", "Courier New", monospace;
   }
 
   .card-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 20px;
   }
 
   .card {
     background: var(--bg-deep);
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: 4px;
     padding: 24px;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
     transition: border-color 0.25s ease, transform 0.25s ease;
   }
 
   .card:hover {
-    border-color: rgba(0, 255, 102, 0.4);
+    border-color: var(--sec-accent);
     transform: translateY(-2px);
   }
 
@@ -381,6 +400,17 @@
     margin-bottom: 14px;
     color: var(--text-main);
   }
+
+  .card h3 .spec-tag {
+    display: block;
+    font-size: 0.68rem;
+    color: var(--sec-accent);
+    letter-spacing: 2.5px;
+    margin-bottom: 6px;
+    font-family: "Consolas", "SF Mono", "Courier New", monospace;
+  }
+
+  .card p.spec-desc { color: var(--text-sub); font-size: 0.9rem; }
 
   ul.tac-list { list-style: none; }
 
@@ -401,25 +431,16 @@
     top: 15px;
     width: 8px;
     height: 8px;
-    background: var(--accent);
-    box-shadow: 0 0 8px rgba(0, 255, 102, 0.7);
-    border-radius: 2px;
+    background: var(--sec-accent);
+    box-shadow: 0 0 8px var(--sec-accent);
+    border-radius: 1px;
   }
 
   ul.tac-list li strong { color: var(--text-main); }
 
-  .cta-text {
-    color: var(--text-sub);
-    margin-bottom: 24px;
-    padding-left: 22px;
-  }
+  .cta-text { color: var(--text-sub); margin-bottom: 24px; padding-left: 22px; }
 
-  .btn-row {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    margin-bottom: 28px;
-  }
+  .btn-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; }
 
   .btn {
     flex: 1 1 220px;
@@ -431,7 +452,7 @@
     font-weight: 700;
     font-size: 0.85rem;
     padding: 16px 24px;
-    border-radius: 6px;
+    border-radius: 3px;
     transition: all 0.25s ease;
   }
 
@@ -451,8 +472,8 @@
   .form-container {
     background: var(--bg-deep);
     border: 1px solid var(--border);
-    border-top: 2px solid var(--accent);
-    border-radius: 8px;
+    border-top: 2px solid var(--sec-accent);
+    border-radius: 4px;
     padding: 12px;
     box-shadow: 0 10px 34px rgba(0, 0, 0, 0.5);
   }
@@ -461,59 +482,89 @@
     width: 100%;
     height: 720px;
     border: none;
-    border-radius: 5px;
     background: var(--bg-panel);
     display: block;
   }
 
-  /* ---------- CHIPS / BADGES ---------- */
+  /* ---------- PROFILE ---------- */
+  .profile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+  }
+
+  .stat-label {
+    font-size: 0.7rem;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--text-sub);
+    font-family: "Consolas", "SF Mono", "Courier New", monospace;
+    margin-bottom: 10px;
+  }
+
+  .stat-value { font-size: 1.3rem; font-weight: 700; letter-spacing: 0.5px; }
+
   .rank-chip {
     display: inline-block;
     background: var(--bg-panel);
     border: 1px solid rgba(0, 255, 102, 0.5);
-    border-radius: 5px;
+    border-radius: 3px;
     padding: 6px 14px;
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     color: var(--accent);
     letter-spacing: 0.5px;
-    font-weight: 600;
+    font-weight: 700;
   }
 
   .badge {
     display: inline-block;
-    border-radius: 4px;
+    border-radius: 3px;
     padding: 3px 10px;
     font-size: 0.68rem;
     letter-spacing: 1.5px;
     text-transform: uppercase;
     font-family: "Consolas", "SF Mono", "Courier New", monospace;
+    margin-right: 6px;
   }
 
   .badge.verified { color: var(--accent); border: 1px solid rgba(0, 255, 102, 0.5); }
   .badge.pending { color: var(--amber); border: 1px solid rgba(255, 179, 71, 0.5); }
   .badge.banned { color: var(--alert); border: 1px solid rgba(255, 77, 90, 0.5); }
-  .badge.admin { color: #6ec1ff; border: 1px solid rgba(110, 193, 255, 0.5); }
+  .badge.admin { color: var(--blue); border: 1px solid rgba(77, 124, 255, 0.55); }
+
+  .spec-chip {
+    display: inline-block;
+    background: var(--bg-panel);
+    border: 1px solid rgba(0, 224, 255, 0.5);
+    border-radius: 3px;
+    padding: 5px 12px;
+    font-size: 0.8rem;
+    color: var(--cyan);
+    letter-spacing: 0.5px;
+    margin: 0 6px 6px 0;
+  }
+
+  .empty-note { color: var(--text-sub); font-size: 0.85rem; }
 
   /* ---------- ADMIN ROSTER ---------- */
   .user-row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 12px;
     background: var(--bg-deep);
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: 4px;
     padding: 14px 18px;
     margin-bottom: 10px;
   }
 
   .user-row.pending-row { border-color: rgba(255, 179, 71, 0.45); }
 
-  .user-name {
-    font-weight: 700;
-    font-size: 0.95rem;
-    min-width: 140px;
+  .user-main {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
   }
+
+  .user-name { font-weight: 700; font-size: 0.95rem; min-width: 140px; }
 
   .user-controls {
     display: flex;
@@ -526,7 +577,7 @@
   .rank-select {
     background: var(--bg-panel);
     border: 1px solid var(--border);
-    border-radius: 5px;
+    border-radius: 3px;
     color: var(--text-main);
     font-size: 0.8rem;
     padding: 7px 8px;
@@ -535,10 +586,10 @@
     cursor: pointer;
   }
 
-  .rank-select:focus { border-color: rgba(0, 255, 102, 0.5); }
+  .rank-select:focus { border-color: rgba(0, 224, 255, 0.55); }
 
   .row-btn {
-    border-radius: 5px;
+    border-radius: 3px;
     padding: 7px 12px;
     font-size: 0.7rem;
     letter-spacing: 1px;
@@ -556,15 +607,69 @@
   .row-btn.danger { color: var(--alert); border: 1px solid rgba(255, 77, 90, 0.5); }
   .row-btn.danger:hover { background: rgba(255, 77, 90, 0.12); }
 
-  .empty-note {
+  .spec-toggle-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed rgba(22, 27, 34, 0.9);
+  }
+
+  .spec-toggle-label {
+    font-size: 0.65rem;
+    letter-spacing: 2px;
     color: var(--text-sub);
+    font-family: "Consolas", "SF Mono", "Courier New", monospace;
+    margin-right: 4px;
+  }
+
+  .spec-toggle {
+    border-radius: 3px;
+    padding: 5px 10px;
+    font-size: 0.7rem;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    background: transparent;
+    color: var(--text-sub);
+    border: 1px solid var(--border);
+    font-family: inherit;
+    transition: all 0.2s ease;
+  }
+
+  .spec-toggle:hover { border-color: rgba(0, 224, 255, 0.5); }
+
+  .spec-toggle.on {
+    color: var(--cyan);
+    border-color: rgba(0, 224, 255, 0.6);
+    background: var(--cyan-dim);
+  }
+
+  .admin-h3 {
     font-size: 0.85rem;
-    padding: 6px 0 2px 22px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    font-family: "Consolas", "SF Mono", "Courier New", monospace;
+  }
+
+  /* schedule callout */
+  .schedule-box {
+    border: 1px solid rgba(0, 224, 255, 0.4);
+    background: var(--cyan-dim);
+    padding: 18px 22px;
+    margin-bottom: 26px;
+    font-family: "Consolas", "SF Mono", "Courier New", monospace;
+    letter-spacing: 1.5px;
+    font-size: 0.9rem;
+    color: var(--cyan);
+    text-transform: uppercase;
   }
 
   footer {
     text-align: center;
-    padding: 28px 20px 10px;
+    padding: 44px 20px 8px;
     color: var(--text-sub);
     font-size: 0.75rem;
     letter-spacing: 2px;
@@ -589,15 +694,27 @@
   }
 
   @media (max-width: 640px) {
-    header, section { padding: 28px 22px; }
-    header h1 { font-size: 1.4rem; }
+    .sec-inner { padding: 36px 18px; }
+    .hero h1 { font-size: 1.7rem; }
     .form-container iframe { height: 600px; }
     .gate-card { padding: 32px 24px; }
     .user-controls { margin-left: 0; width: 100%; }
+    .banner-btn { padding: 7px 10px; font-size: 0.65rem; }
+    .brand { font-size: 0.9rem; letter-spacing: 2px; }
   }
 </style>
 </head>
 <body>
+
+<!-- ============ TOP BANNER ============ -->
+<nav class="top-banner">
+  <span class="brand"><span class="slashes">//</span>ETOG</span>
+  <div class="banner-links">
+    <a class="banner-btn" href="index.html">Home</a>
+    <a class="banner-btn cyan" href="portal.html">Portal</a>
+    <button class="banner-btn logout" id="logout-btn" type="button">Log Out</button>
+  </div>
+</nav>
 
 <!-- ============ SCREEN 1: ACCESS CODE GATE ============ -->
 <div id="gate" class="screen active">
@@ -648,81 +765,139 @@
   </div>
 </div>
 
-<!-- ============ SCREEN 4: DASHBOARD ============ -->
+<!-- ============ DASHBOARD ============ -->
 <div id="dashboard">
-<div class="wrapper">
 
-  <header>
-    <div class="header-actions">
-      <a class="mini-btn" href="index.html">&#9668; Main Site</a>
-      <button class="mini-btn logout" id="logout-btn" type="button">Log Out</button>
+  <!-- SEC 1: GREETING HERO -->
+  <header class="snap-sec hero">
+    <div class="sec-inner">
+      <h1>Hello, <span class="hello-rank" id="hello-rank"></span> <span class="hello-name" id="hello-name"></span></h1>
+      <div class="tagline">// AUTHORIZED PERSONNEL ONLY // CLEARANCE GRANTED</div>
     </div>
-    <h1>E.T.O.G. Member Portal</h1>
-    <div class="tagline">// AUTHORIZED PERSONNEL ONLY // CLEARANCE GRANTED</div>
-    <div class="id-card">
-      <span style="color: var(--text-sub); font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase;">Operator:</span>
-      <strong id="me-username">—</strong>
-      <span class="rank-chip" id="me-rank">—</span>
-      <span class="badge admin" id="me-admin-badge" style="display:none;">Command Access</span>
-    </div>
+    <span class="scroll-hint">&#9660; SCROLL</span>
   </header>
 
-  <!-- ADMIN PANEL (only visible to admin accounts) -->
-  <section id="admin-section" style="display:none;">
-    <h2 class="section-title amber">Command Panel</h2>
-    <p class="section-sub">// head of etog only — account management</p>
-
-    <h3 style="font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; color: var(--amber); margin-bottom: 12px; font-family: 'Consolas', 'SF Mono', 'Courier New', monospace;">Awaiting Verification <span id="pending-count"></span></h3>
-    <div id="pending-list"><p class="empty-note">No accounts waiting for verification.</p></div>
-
-    <h3 style="font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin: 26px 0 12px; font-family: 'Consolas', 'SF Mono', 'Courier New', monospace;">Full Roster</h3>
-    <div id="roster-list"><p class="empty-note">Loading roster&#8230;</p></div>
-  </section>
-
-  <section>
-    <h2 class="section-title">Operations Briefing</h2>
-    <p class="section-sub">// member intel — read before your shift</p>
-    <div class="card-grid">
-      <div class="card">
-        <h3>Shift Benchmarks</h3>
-        <ul class="tac-list">
-          <li><strong>15-Minute Shift:</strong> Top 3 of the entire team OR at least 2 kills.</li>
-          <li><strong>30-Minute Shift:</strong> Top 3 of the entire team OR at least 5 kills.</li>
-          <li><strong>1-Hour Shift:</strong> Top 3 of the entire team OR at least 10 kills.</li>
-          <li><strong>Endurance Shift (1+ Hours):</strong> Average at least 5 kills per hour with a maximum of 5 combat deaths per hour.</li>
-          <li><strong>Elite Promotions:</strong> Elite Solo Commander / Elite Commander require an endurance shift of at least 1:15 averaging 10 kills per hour.</li>
-        </ul>
-      </div>
-      <div class="card">
-        <h3>Field Reminders</h3>
-        <ul class="tac-list">
-          <li><strong>Death Exemptions:</strong> Deaths from vehicles or WN camping are wiped from your combat record. Only direct, active combat deaths count.</li>
-          <li><strong>Constant Readiness:</strong> No scheduled shifts — log on and secure the plant whenever you wish.</li>
-          <li><strong>Log Everything:</strong> Shifts only count toward promotion if you record them. Submit your shift report immediately after your session ends.</li>
-          <li><strong>Honesty Protocol:</strong> Falsified shift reports result in removal from ETOG.</li>
-        </ul>
+  <!-- SEC 2: OPERATOR PROFILE -->
+  <section class="snap-sec acc-cyan tint">
+    <div class="sec-inner">
+      <h2 class="section-title">Operator Profile</h2>
+      <p class="section-sub">// your service record</p>
+      <div class="profile-grid">
+        <div class="card">
+          <p class="stat-label">Current Rank</p>
+          <span class="rank-chip" id="prof-rank">—</span>
+        </div>
+        <div class="card">
+          <p class="stat-label">Account Status</p>
+          <div id="prof-status">—</div>
+        </div>
+        <div class="card">
+          <p class="stat-label">Specialities</p>
+          <div id="prof-specs"><span class="empty-note">None yet — earn one at Saturday tryouts.</span></div>
+        </div>
+        <div class="card">
+          <p class="stat-label">Enlisted Since</p>
+          <span class="stat-value" id="prof-joined">—</span>
+        </div>
       </div>
     </div>
   </section>
 
-  <section>
-    <h2 class="section-title">Shift Recording</h2>
-    <p class="section-sub">// submit your performance metrics</p>
-    <p class="cta-text">Completed a shift? File your report below. Include your shift length, kills, deaths, and placement so command can process your rank progression.</p>
-    <div class="btn-row">
-      <a class="btn btn-primary" href="https://forms.gle/mxREzrFaoTiiHXVE7" target="_blank" rel="noopener">Record Your Shift</a>
-    </div>
-    <div class="form-container">
-      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfz8FqwZBM5zaqqmTrJC3sFsv-hdldAxlfJoxI9T-Mh2IOaIQ/viewform?embedded=true" title="ETOG Shift Recording Form" loading="lazy">Loading shift recording form&#8230;</iframe>
-      <p style="color: var(--text-sub); font-size: 0.8rem; padding: 10px 6px 2px; text-align: center;">Form not loading? You need to be signed into Google — use the Record Your Shift button above instead.</p>
+  <!-- ADMIN: COMMAND PANEL -->
+  <section class="snap-sec acc-amber" id="admin-section" style="display:none;">
+    <div class="sec-inner">
+      <h2 class="section-title">Command Panel</h2>
+      <p class="section-sub">// head of etog only — account management</p>
+
+      <h3 class="admin-h3" style="color: var(--amber);">Awaiting Verification <span id="pending-count"></span></h3>
+      <div id="pending-list"><p class="empty-note">No accounts waiting for verification.</p></div>
+
+      <h3 class="admin-h3" style="color: var(--accent); margin-top: 26px;">Full Roster</h3>
+      <div id="roster-list"><p class="empty-note">Loading roster&#8230;</p></div>
     </div>
   </section>
 
-  <footer>
-    <span class="status-dot"></span>// PORTAL SESSION ACTIVE // OPERATING UNDER THE AUTHORITY OF TURTLES ARE BETTER THAN YURTLES // SECURITY DIVISION
-  </footer>
+  <!-- SEC: SPECIALITY TRYOUTS -->
+  <section class="snap-sec acc-blue">
+    <div class="sec-inner">
+      <h2 class="section-title">Speciality Tryouts</h2>
+      <p class="section-sub">// prove your expertise</p>
+      <div class="schedule-box">&#128336; Every Saturday // 1:30 PM BST</div>
+      <p class="cta-text">Show up to a tryout and prove yourself in one of the fields below. Pass, and the Head of ETOG adds the speciality to your profile permanently. More specialities may be added later.</p>
+      <div class="card-grid">
+        <div class="card">
+          <h3><span class="spec-tag">SPEC 01</span>Black-Ops</h3>
+          <p class="spec-desc">Covert, high-risk operations. Reserved for operators who can move unseen and strike with precision.</p>
+        </div>
+        <div class="card">
+          <h3><span class="spec-tag">SPEC 02</span>Civilian Work</h3>
+          <p class="spec-desc">Handling, guiding and protecting civilians on site without breaking plant order.</p>
+        </div>
+        <div class="card">
+          <h3><span class="spec-tag">SPEC 03</span>CHP Expertise</h3>
+          <p class="spec-desc">Mastery of CHP operations — knowing the systems, the risks and how to hold them.</p>
+        </div>
+        <div class="card">
+          <h3><span class="spec-tag">SPEC 04</span>CR Expertise</h3>
+          <p class="spec-desc">Mastery of CR operations — total control of the room and everything that happens in it.</p>
+        </div>
+        <div class="card">
+          <h3><span class="spec-tag">SPEC 05</span>PD Guarding</h3>
+          <p class="spec-desc">Elite defensive duty. Holding the PD line against anything that comes at it.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-</div>
+  <!-- SEC: OPERATIONS BRIEFING -->
+  <section class="snap-sec tint">
+    <div class="sec-inner">
+      <h2 class="section-title">Operations Briefing</h2>
+      <p class="section-sub">// member intel — read before your shift</p>
+      <div class="card-grid">
+        <div class="card">
+          <h3>Shift Benchmarks</h3>
+          <ul class="tac-list">
+            <li><strong>15-Minute Shift:</strong> Top 3 of the entire team OR at least 2 kills.</li>
+            <li><strong>30-Minute Shift:</strong> Top 3 of the entire team OR at least 5 kills.</li>
+            <li><strong>1-Hour Shift:</strong> Top 3 of the entire team OR at least 10 kills.</li>
+            <li><strong>Endurance Shift (1+ Hours):</strong> Average at least 5 kills per hour with a maximum of 5 combat deaths per hour.</li>
+            <li><strong>Elite Promotions:</strong> Elite Solo Commander / Elite Commander require an endurance shift of at least 1:15 averaging 10 kills per hour.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Field Reminders</h3>
+          <ul class="tac-list">
+            <li><strong>Death Exemptions:</strong> Deaths from vehicles or WN camping are wiped from your combat record. Only direct, active combat deaths count.</li>
+            <li><strong>Constant Readiness:</strong> No scheduled shifts — log on and secure the plant whenever you wish.</li>
+            <li><strong>Log Everything:</strong> Shifts only count toward promotion if you record them. Submit your shift report immediately after your session ends.</li>
+            <li><strong>Honesty Protocol:</strong> Falsified shift reports result in removal from ETOG.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEC: SHIFT RECORDING -->
+  <section class="snap-sec acc-cyan">
+    <div class="sec-inner">
+      <h2 class="section-title">Shift Recording</h2>
+      <p class="section-sub">// submit your performance metrics</p>
+      <p class="cta-text">Completed a shift? File your report below. Include your shift length, kills, deaths, and placement so command can process your rank progression.</p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href="https://forms.gle/mxREzrFaoTiiHXVE7" target="_blank" rel="noopener">Record Your Shift</a>
+      </div>
+      <div class="form-container">
+        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfz8FqwZBM5zaqqmTrJC3sFsv-hdldAxlfJoxI9T-Mh2IOaIQ/viewform?embedded=true" title="ETOG Shift Recording Form" loading="lazy">Loading shift recording form&#8230;</iframe>
+        <p style="color: var(--text-sub); font-size: 0.8rem; padding: 10px 6px 2px; text-align: center;">Form not loading? You need to be signed into Google — use the Record Your Shift button above instead.</p>
+      </div>
+
+      <footer>
+        <span class="status-dot"></span>// PORTAL SESSION ACTIVE // OPERATING UNDER THE AUTHORITY OF TURTLES ARE BETTER THAN YURTLES // SECURITY DIVISION
+      </footer>
+    </div>
+  </section>
+
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -733,8 +908,7 @@
   "use strict";
 
   /* ================================================================
-     FIREBASE CONFIG — paste your project's config object here.
-     Get it from: Firebase console > Project settings > Your apps > Web
+     FIREBASE CONFIG
      ================================================================ */
   var firebaseConfig = {
     apiKey: "AIzaSyALnzCWqcqW-TRzwLBcX8s6MTMpD52F0m0",
@@ -763,18 +937,20 @@
     "Operator",
     "Recruit"
   ];
+  var SPECIALITIES = ["Black-Ops", "Civilian Work", "CHP Expertise", "CR Expertise", "PD Guarding"];
 
   var $ = function (id) { return document.getElementById(id); };
   var screens = { gate: $("gate"), auth: $("auth"), hold: $("hold") };
   var dashboard = $("dashboard");
   var db = null, auth = null;
-  var myDoc = null, rosterUnsub = null, myUnsub = null;
+  var myDoc = null, rosterUnsub = null;
 
   function show(name) {
     Object.keys(screens).forEach(function (k) { screens[k].classList.remove("active"); });
     dashboard.classList.remove("active");
     if (name === "dashboard") dashboard.classList.add("active");
     else screens[name].classList.add("active");
+    $("logout-btn").style.display = (name === "dashboard") ? "inline-block" : "none";
     window.scrollTo(0, 0);
   }
 
@@ -815,7 +991,7 @@
   $("gate-btn").addEventListener("click", gateAttempt);
   $("pass-input").addEventListener("keydown", function (e) { if (e.key === "Enter") gateAttempt(); });
 
-  /* ---------------- AUTH SCREEN (sign in / sign up) ---------------- */
+  /* ---------------- AUTH SCREEN ---------------- */
   var mode = "signin";
 
   function setMode(m) {
@@ -850,6 +1026,19 @@
     return "SYSTEM ERROR — TRY AGAIN";
   }
 
+  function newProfile(username) {
+    return {
+      username: username,
+      usernameLower: username.toLowerCase(),
+      rank: "Recruit",
+      verified: false,
+      admin: false,
+      banned: false,
+      specialities: [],
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+  }
+
   function authAttempt() {
     var username = $("auth-username").value.trim();
     var password = $("auth-password").value;
@@ -868,15 +1057,7 @@
     var action;
     if (mode === "signup") {
       action = auth.createUserWithEmailAndPassword(email, password).then(function (cred) {
-        return db.collection("users").doc(cred.user.uid).set({
-          username: username,
-          usernameLower: username.toLowerCase(),
-          rank: "Recruit",
-          verified: false,
-          admin: false,
-          banned: false,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
+        return db.collection("users").doc(cred.user.uid).set(newProfile(username));
       });
     } else {
       action = auth.signInWithEmailAndPassword(email, password);
@@ -885,7 +1066,6 @@
     action.then(function () {
       $("auth-error").textContent = "";
       $("auth-password").value = "";
-      // onAuthStateChanged handles routing
     }).catch(function (err) {
       authError(friendlyAuthError(err));
     }).finally(function () {
@@ -927,17 +1107,8 @@
     if (!user) { route(); return; }
     db.collection("users").doc(user.uid).get().then(function (snap) {
       if (!snap.exists) {
-        // Auth account exists but profile doc is missing (interrupted signup) — recreate it.
         var uname = (user.email || "unknown").split("@")[0];
-        return db.collection("users").doc(user.uid).set({
-          username: uname,
-          usernameLower: uname.toLowerCase(),
-          rank: "Recruit",
-          verified: false,
-          admin: false,
-          banned: false,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        }).then(loadMyDoc);
+        return db.collection("users").doc(user.uid).set(newProfile(uname)).then(loadMyDoc);
       }
       myDoc = snap.data();
       if (myDoc.banned) {
@@ -965,10 +1136,36 @@
 
   /* ---------------- DASHBOARD ---------------- */
   function renderDashboard() {
-    $("me-username").textContent = myDoc.username;
-    $("me-rank").textContent = myDoc.rank;
-    $("me-admin-badge").style.display = myDoc.admin ? "inline-block" : "none";
-    $("admin-section").style.display = myDoc.admin ? "block" : "none";
+    $("hello-rank").textContent = myDoc.rank;
+    $("hello-name").textContent = myDoc.username;
+    $("prof-rank").textContent = myDoc.rank;
+
+    var status = $("prof-status");
+    status.innerHTML = "";
+    status.appendChild(makeBadge("verified", "Verified"));
+    if (myDoc.admin) status.appendChild(makeBadge("admin", "Command"));
+
+    var specsBox = $("prof-specs");
+    specsBox.innerHTML = "";
+    var specs = myDoc.specialities || [];
+    if (specs.length) {
+      specs.forEach(function (s) {
+        var chip = document.createElement("span");
+        chip.className = "spec-chip";
+        chip.textContent = s;
+        specsBox.appendChild(chip);
+      });
+    } else {
+      specsBox.innerHTML = '<span class="empty-note">None yet — earn one at Saturday tryouts.</span>';
+    }
+
+    var joined = "—";
+    if (myDoc.createdAt && myDoc.createdAt.toDate) {
+      joined = myDoc.createdAt.toDate().toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+    }
+    $("prof-joined").textContent = joined;
+
+    $("admin-section").style.display = myDoc.admin ? "flex" : "none";
     if (myDoc.admin) watchRoster();
     show("dashboard");
   }
@@ -1002,27 +1199,26 @@
     list.forEach(function (u) {
       var row = document.createElement("div");
       row.className = "user-row pending-row";
+      var main = document.createElement("div");
+      main.className = "user-main";
       var name = document.createElement("span");
       name.className = "user-name";
       name.textContent = u.username;
-      var badge = document.createElement("span");
-      badge.className = "badge pending";
-      badge.textContent = "Pending";
+      var badge = makeBadge("pending", "Pending");
       var controls = document.createElement("div");
       controls.className = "user-controls";
-      var approve = rowButton("Verify", "approve", function () {
+      controls.appendChild(rowButton("Verify", "approve", function () {
         db.collection("users").doc(u._id).update({ verified: true });
-      });
-      var deny = rowButton("Deny", "danger", function () {
+      }));
+      controls.appendChild(rowButton("Deny", "danger", function () {
         if (window.confirm("Deny and ban " + u.username + "?")) {
           db.collection("users").doc(u._id).update({ banned: true });
         }
-      });
-      controls.appendChild(approve);
-      controls.appendChild(deny);
-      row.appendChild(name);
-      row.appendChild(badge);
-      row.appendChild(controls);
+      }));
+      main.appendChild(name);
+      main.appendChild(badge);
+      main.appendChild(controls);
+      row.appendChild(main);
       box.appendChild(row);
     });
   }
@@ -1037,15 +1233,17 @@
     list.forEach(function (u) {
       var row = document.createElement("div");
       row.className = "user-row";
+      var main = document.createElement("div");
+      main.className = "user-main";
       var name = document.createElement("span");
       name.className = "user-name";
       name.textContent = u.username;
-      row.appendChild(name);
+      main.appendChild(name);
 
-      if (u.admin) row.appendChild(makeBadge("admin", "Command"));
-      if (u.banned) row.appendChild(makeBadge("banned", "Banned"));
-      else if (u.verified) row.appendChild(makeBadge("verified", "Verified"));
-      else row.appendChild(makeBadge("pending", "Pending"));
+      if (u.admin) main.appendChild(makeBadge("admin", "Command"));
+      if (u.banned) main.appendChild(makeBadge("banned", "Banned"));
+      else if (u.verified) main.appendChild(makeBadge("verified", "Verified"));
+      else main.appendChild(makeBadge("pending", "Pending"));
 
       var controls = document.createElement("div");
       controls.className = "user-controls";
@@ -1077,7 +1275,33 @@
           }
         }));
       }
-      row.appendChild(controls);
+      main.appendChild(controls);
+      row.appendChild(main);
+
+      // speciality toggles
+      var specRow = document.createElement("div");
+      specRow.className = "spec-toggle-row";
+      var label = document.createElement("span");
+      label.className = "spec-toggle-label";
+      label.textContent = "SPEC:";
+      specRow.appendChild(label);
+      var userSpecs = u.specialities || [];
+      SPECIALITIES.forEach(function (s) {
+        var has = userSpecs.indexOf(s) !== -1;
+        var chip = document.createElement("button");
+        chip.type = "button";
+        chip.className = "spec-toggle" + (has ? " on" : "");
+        chip.textContent = s;
+        chip.addEventListener("click", function () {
+          db.collection("users").doc(u._id).update({
+            specialities: has
+              ? firebase.firestore.FieldValue.arrayRemove(s)
+              : firebase.firestore.FieldValue.arrayUnion(s)
+          });
+        });
+        specRow.appendChild(chip);
+      });
+      row.appendChild(specRow);
       box.appendChild(row);
     });
   }
@@ -1097,6 +1321,52 @@
     b.addEventListener("click", onClick);
     return b;
   }
+
+  /* ---------------- SECTION SCROLL RESISTANCE ---------------- */
+  (function () {
+    var THRESHOLD = 340;
+    var acc = 0, lastWheel = 0, animating = false;
+
+    function visibleSections() {
+      return Array.prototype.filter.call(document.querySelectorAll(".snap-sec"), function (s) {
+        return s.offsetParent !== null;
+      });
+    }
+
+    window.addEventListener("wheel", function (e) {
+      if (!dashboard.classList.contains("active")) return;
+      var secs = visibleSections();
+      if (!secs.length) return;
+      if (animating) { e.preventDefault(); return; }
+
+      var bannerH = 56;
+      var y = window.scrollY;
+      var idx = 0;
+      for (var i = 0; i < secs.length; i++) {
+        if (secs[i].offsetTop <= y + bannerH + 6) idx = i;
+      }
+      var sec = secs[idx];
+      var goingDown = e.deltaY > 0;
+      var atBottom = y + window.innerHeight >= sec.offsetTop + sec.offsetHeight - 6;
+      var atTop = y <= sec.offsetTop - bannerH + 6;
+      if (!(goingDown ? atBottom : atTop)) return;
+
+      var target = idx + (goingDown ? 1 : -1);
+      if (target < 0 || target >= secs.length) return;
+
+      e.preventDefault();
+      var now = Date.now();
+      if (now - lastWheel > 900) acc = 0;
+      lastWheel = now;
+      acc += Math.abs(e.deltaY);
+      if (acc >= THRESHOLD) {
+        acc = 0;
+        animating = true;
+        secs[target].scrollIntoView({ behavior: "smooth", block: "start" });
+        setTimeout(function () { animating = false; }, 800);
+      }
+    }, { passive: false });
+  })();
 
   /* ---------------- BOOT ---------------- */
   if (firebaseConfig && window.firebase) {
