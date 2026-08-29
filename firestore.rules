@@ -2,17 +2,26 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    function myData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
     function isAdmin() {
-      return request.auth != null &&
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.admin == true;
+      return request.auth != null && myData().admin == true;
+    }
+
+    // Operative = verified, not banned, ranked above Recruit. Comms access.
+    function isOperative() {
+      return request.auth != null
+        && myData().verified == true
+        && myData().banned != true
+        && myData().rank != "Recruit";
     }
 
     match /users/{uid} {
-      // You can read your own profile; admins can read (and list) everyone.
-      allow read: if request.auth != null && (request.auth.uid == uid || isAdmin());
+      // Own profile, admins, and any operative (needed for rosters/comms).
+      allow read: if request.auth != null && (request.auth.uid == uid || isAdmin() || isOperative());
 
-      // Anyone signed in can create THEIR OWN profile, but it must start
-      // unverified, non-admin, unbanned, and as a Recruit.
       allow create: if request.auth != null
         && request.auth.uid == uid
         && request.resource.data.verified == false
@@ -20,8 +29,91 @@ service cloud.firestore {
         && request.resource.data.banned == false
         && request.resource.data.rank == "Recruit";
 
-      // Only admins can change accounts (verify, rank up, ban...).
       allow update, delete: if isAdmin();
+    }
+
+    // Shadow Division levels live here so regular members can never read
+    // anyone else's status. Doc id = member uid, field: status.
+    match /shadowStatus/{uid} {
+      allow read: if request.auth != null && (request.auth.uid == uid || isAdmin());
+      allow write: if isAdmin();
+    }
+
+    // Requests to DM the Head. Doc id = requester uid.
+    match /dmRequests/{uid} {
+      allow read: if request.auth != null && (request.auth.uid == uid || isAdmin());
+      allow create: if isOperative() && request.auth.uid == uid
+        && request.resource.data.status == "pending";
+      allow update: if isAdmin();
+      allow delete: if isAdmin() || (request.auth != null && request.auth.uid == uid);
+    }
+
+    match /chats/{chatId} {
+
+      function amMember() { return request.auth.uid in resource.data.members; }
+      function amInvited() { return request.auth.uid in resource.data.invited; }
+      function amOwner() { return resource.data.owner == request.auth.uid; }
+      function sameRankChat() {
+        return resource.data.type == "rank" && resource.data.rank == myData().rank;
+      }
+      function myShadowActive() {
+        return exists(/databases/$(database)/documents/shadowStatus/$(request.auth.uid))
+          && get(/databases/$(database)/documents/shadowStatus/$(request.auth.uid)).data.status == "active";
+      }
+      function canDirectDm() {
+        return isAdmin()
+          || myData().rank == "Head of Grouped Operations"
+          || myData().rank == "Head of Solo Operations"
+          || myShadowActive();
+      }
+      function dmRequestAccepted() {
+        return exists(/databases/$(database)/documents/dmRequests/$(request.auth.uid))
+          && get(/databases/$(database)/documents/dmRequests/$(request.auth.uid)).data.status == "accepted";
+      }
+
+      allow read: if isOperative() && (isAdmin() || sameRankChat() || amMember() || amInvited());
+
+      allow create: if isOperative() && (
+        // rank chat: only for your own rank
+        (request.resource.data.type == "rank"
+          && request.resource.data.rank == myData().rank)
+        // group: you must be the owner and a member
+        || (request.resource.data.type == "group"
+          && request.resource.data.owner == request.auth.uid
+          && request.auth.uid in request.resource.data.members)
+        // dm: two people incl. you, and you're privileged or accepted
+        || (request.resource.data.type == "dm"
+          && request.auth.uid in request.resource.data.members
+          && request.resource.data.members.size() == 2
+          && (canDirectDm() || dmRequestAccepted()))
+      );
+
+      // Owner manages the group; invited members accept/decline; members
+      // and rank-mates may touch chat metadata; admin always.
+      allow update: if isOperative()
+        && (isAdmin() || amOwner() || amMember() || amInvited() || sameRankChat());
+
+      allow delete: if isAdmin() || (isOperative() && amOwner());
+
+      match /messages/{msgId} {
+        function chat() {
+          return get(/databases/$(database)/documents/chats/$(chatId)).data;
+        }
+        allow read: if isOperative() && (
+          isAdmin()
+          || (chat().type == "rank" && chat().rank == myData().rank)
+          || request.auth.uid in chat().members
+        );
+        allow create: if isOperative()
+          && request.resource.data.uid == request.auth.uid
+          && request.resource.data.text is string
+          && request.resource.data.text.size() > 0
+          && request.resource.data.text.size() <= 1000
+          && (
+            (chat().type == "rank" && chat().rank == myData().rank)
+            || request.auth.uid in chat().members
+          );
+      }
     }
   }
 }

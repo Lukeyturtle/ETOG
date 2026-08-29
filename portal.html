@@ -674,6 +674,149 @@
     font-family: "Consolas", "SF Mono", "Courier New", monospace;
   }
 
+  /* ---------- COMMS ---------- */
+  .comms-wrap {
+    display: flex;
+    gap: 14px;
+    height: 62vh;
+    min-height: 420px;
+    background: var(--bg-deep);
+    border: 1px solid var(--border);
+    padding: 12px;
+  }
+
+  .comms-side {
+    width: 260px;
+    flex-shrink: 0;
+    overflow-y: auto;
+    border-right: 1px solid var(--border);
+    padding-right: 12px;
+  }
+
+  .comms-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .comms-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+    margin-bottom: 8px;
+  }
+
+  #chat-title { font-weight: 700; letter-spacing: 1px; font-size: 0.95rem; }
+
+  #chat-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  .comms-messages { flex: 1; overflow-y: auto; padding: 6px 4px; }
+
+  .msg { padding: 6px 8px; margin-bottom: 4px; border-left: 2px solid transparent; }
+  .msg .msg-user { font-weight: 700; color: var(--cyan); margin-right: 8px; font-size: 0.85rem; }
+  .msg.mine .msg-user { color: var(--accent); }
+  .msg .msg-time { color: var(--text-sub); font-size: 0.65rem; margin-left: 8px; }
+  .msg .msg-text { color: var(--text-main); font-size: 0.9rem; overflow-wrap: break-word; }
+  .msg.announcement { border-left-color: var(--amber); background: rgba(255, 179, 71, 0.07); }
+
+  .comms-input-row { display: flex; gap: 8px; margin-top: 8px; align-items: center; }
+
+  .chat-item {
+    padding: 9px 10px;
+    border: 1px solid var(--border);
+    margin-bottom: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+  }
+
+  .chat-item:hover { border-color: rgba(0, 224, 255, 0.5); }
+  .chat-item.active-chat { border-color: var(--cyan); background: var(--cyan-dim); }
+
+  .chat-item .chat-type {
+    display: block;
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    color: var(--text-sub);
+    font-family: "Consolas", "SF Mono", "Courier New", monospace;
+    text-transform: uppercase;
+  }
+
+  .comms-side-label {
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    color: var(--text-sub);
+    margin: 12px 0 6px;
+    font-family: "Consolas", "SF Mono", "Courier New", monospace;
+    text-transform: uppercase;
+  }
+
+  .side-btn {
+    display: block;
+    width: 100%;
+    margin-bottom: 8px;
+    background: transparent;
+    color: var(--cyan);
+    border: 1px solid rgba(0, 224, 255, 0.5);
+    border-radius: 3px;
+    padding: 9px 10px;
+    font-size: 0.72rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: "Consolas", "SF Mono", "Courier New", monospace;
+    transition: all 0.2s ease;
+    text-align: center;
+  }
+
+  .side-btn:hover { background: var(--cyan-dim); }
+  .side-btn.green { color: var(--accent); border-color: rgba(0, 255, 102, 0.5); }
+  .side-btn.green:hover { background: var(--accent-dim); }
+
+  .side-note { color: var(--text-sub); font-size: 0.75rem; margin-bottom: 8px; }
+
+  .invite-item, .req-item {
+    border: 1px dashed rgba(255, 179, 71, 0.5);
+    padding: 9px 10px;
+    margin-bottom: 6px;
+    font-size: 0.8rem;
+  }
+
+  .invite-item .row-btn, .req-item .row-btn { margin-top: 6px; margin-right: 6px; }
+
+  .picker-panel {
+    border: 1px solid var(--border);
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+
+  .picker-panel label.pick-row {
+    display: block;
+    font-size: 0.82rem;
+    color: var(--text-sub);
+    padding: 3px 0;
+    cursor: pointer;
+  }
+
+  .picker-panel label.pick-row input { margin-right: 8px; }
+
+  @media (max-width: 760px) {
+    .comms-wrap { flex-direction: column; height: 78vh; }
+    .comms-side {
+      width: 100%;
+      max-height: 34%;
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+      padding-right: 0;
+      padding-bottom: 10px;
+    }
+  }
+
   /* schedule callout */
   .schedule-box {
     border: 1px solid rgba(0, 224, 255, 0.4);
@@ -838,6 +981,36 @@
 
       <h3 class="admin-h3" style="color: var(--accent); margin-top: 26px;">Full Roster</h3>
       <div id="roster-list"><p class="empty-note">Loading roster&#8230;</p></div>
+    </div>
+  </section>
+
+  <!-- SEC: COMMS (operatives only) -->
+  <section class="snap-sec acc-cyan" id="comms-section" style="display:none;">
+    <div class="sec-inner">
+      <h2 class="section-title">Comms</h2>
+      <p class="section-sub">// faction messaging — operatives only</p>
+      <div class="comms-wrap" data-free-scroll>
+        <div class="comms-side">
+          <div id="head-dm-area"></div>
+          <div id="admin-req-area"></div>
+          <div id="group-create-area"></div>
+          <p class="comms-side-label">Channels</p>
+          <div id="chat-list"></div>
+          <div id="invite-list"></div>
+        </div>
+        <div class="comms-main">
+          <div class="comms-header">
+            <span id="chat-title">Select a channel</span>
+            <div id="chat-actions"></div>
+          </div>
+          <div class="comms-messages" id="chat-messages"><p class="empty-note" style="padding:16px;">Pick a channel on the left to start talking.</p></div>
+          <div class="comms-input-row" id="chat-input-row" style="display:none;">
+            <label id="announce-wrap" style="display:none; color: var(--amber); font-size: 1rem; cursor: pointer;" title="Send as announcement"><input type="checkbox" id="announce-check"> &#128227;</label>
+            <input type="text" id="chat-input" class="field" style="margin:0;" maxlength="500" placeholder="Type a message&#8230;" autocomplete="off">
+            <button class="gate-btn" id="chat-send" type="button" style="width:auto; margin:0; padding: 12px 20px;">Send</button>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -1026,7 +1199,15 @@
   var screens = { gate: $("gate"), auth: $("auth"), hold: $("hold") };
   var dashboard = $("dashboard");
   var db = null, auth = null;
-  var myDoc = null, rosterUnsub = null;
+  var myDoc = null, myShadow = "none", rosterUnsub = null, shadowMapUnsub = null;
+  var shadowMap = {}, latestRoster = null, latestPending = null;
+  var LEADER_CONTROL = {
+    "Elite Commander": ["Squad Commander", "Fireteam Leader", "Operator"],
+    "Squad Commander": ["Fireteam Leader", "Operator"],
+    "Fireteam Leader": ["Operator"],
+    "Elite Solo Commander": ["Solo Commander", "Elite Solo Operator", "Solo Operator", "Operator"],
+    "Solo Commander": ["Elite Solo Operator", "Solo Operator", "Operator"]
+  };
 
   function show(name) {
     Object.keys(screens).forEach(function (k) { screens[k].classList.remove("active"); });
@@ -1189,12 +1370,17 @@
   function loadMyDoc() {
     var user = auth.currentUser;
     if (!user) { route(); return; }
-    db.collection("users").doc(user.uid).get().then(function (snap) {
+    Promise.all([
+      db.collection("users").doc(user.uid).get(),
+      db.collection("shadowStatus").doc(user.uid).get().catch(function () { return null; })
+    ]).then(function (snaps) {
+      var snap = snaps[0], shadowSnap = snaps[1];
       if (!snap.exists) {
         var uname = (user.email || "unknown").split("@")[0];
         return db.collection("users").doc(user.uid).set(newProfile(uname)).then(loadMyDoc);
       }
       myDoc = snap.data();
+      myShadow = (shadowSnap && shadowSnap.exists) ? (shadowSnap.data().status || "none") : shadowStatusOf(myDoc);
       if (myDoc.banned) {
         $("hold-icon").textContent = "⛔";
         $("hold-title").textContent = "Access Revoked";
@@ -1244,7 +1430,7 @@
     }
 
     // Shadow status: "none" (section invisible), "aware" (teaser), "active" (full briefing)
-    var shadow = shadowStatusOf(myDoc);
+    var shadow = myShadow;
 
     var divBox = $("prof-division");
     if (shadow === "active") {
@@ -1268,12 +1454,23 @@
 
     $("admin-section").style.display = myDoc.admin ? "flex" : "none";
     if (myDoc.admin) watchRoster();
+
+    var operative = myDoc.verified && !myDoc.banned && myDoc.rank !== "Recruit";
+    $("comms-section").style.display = operative ? "flex" : "none";
+    if (operative) initComms();
+
     show("dashboard");
   }
 
   /* ---------------- ADMIN: ROSTER ---------------- */
   function watchRoster() {
     if (rosterUnsub) rosterUnsub();
+    if (shadowMapUnsub) shadowMapUnsub();
+    shadowMapUnsub = db.collection("shadowStatus").onSnapshot(function (qs) {
+      shadowMap = {};
+      qs.forEach(function (d) { shadowMap[d.id] = d.data().status; });
+      if (latestRoster) renderRoster(latestRoster);
+    }, function () { /* before rules update this collection may be unreadable */ });
     rosterUnsub = db.collection("users").orderBy("usernameLower").onSnapshot(function (qs) {
       var pending = [], roster = [];
       qs.forEach(function (docSnap) {
@@ -1282,6 +1479,7 @@
         roster.push(u);
         if (!u.verified && !u.banned) pending.push(u);
       });
+      latestRoster = roster;
       renderPending(pending);
       renderRoster(roster);
     }, function () {
@@ -1409,18 +1607,16 @@
       specRow.appendChild(shadowLabel);
       var shadowSel = document.createElement("select");
       shadowSel.className = "rank-select shadow-select";
+      var currentShadow = shadowMap[u._id] || shadowStatusOf(u);
       [["none", "Hidden (default)"], ["aware", "Knows about it"], ["active", "Active operative"]].forEach(function (opt) {
         var o = document.createElement("option");
         o.value = opt[0];
         o.textContent = opt[1];
-        if (opt[0] === shadowStatusOf(u)) o.selected = true;
+        if (opt[0] === currentShadow) o.selected = true;
         shadowSel.appendChild(o);
       });
       shadowSel.addEventListener("change", function () {
-        db.collection("users").doc(u._id).update({
-          shadowStatus: shadowSel.value,
-          shadowDivision: shadowSel.value === "active"
-        });
+        db.collection("shadowStatus").doc(u._id).set({ status: shadowSel.value });
       });
       specRow.appendChild(shadowSel);
       row.appendChild(specRow);
@@ -1450,6 +1646,467 @@
     return b;
   }
 
+  /* ---------------- COMMS ---------------- */
+  var commsUnsubs = [], msgUnsub = null, currentChat = null;
+  var myChats = [], myInvites = [], allUsers = [], headUid = null, myRequest = null, pendingReqs = [];
+
+  function teardownComms() {
+    commsUnsubs.forEach(function (u) { try { u(); } catch (e) {} });
+    commsUnsubs = [];
+    if (msgUnsub) { try { msgUnsub(); } catch (e) {} msgUnsub = null; }
+    currentChat = null;
+    myChats = []; myInvites = []; allUsers = []; headUid = null; myRequest = null; pendingReqs = [];
+  }
+
+  function slugRank(r) { return r.toLowerCase().replace(/[^a-z0-9]+/g, "-"); }
+
+  function canDirectDmHead() {
+    return myShadow === "active" ||
+      myDoc.rank === "Head of Grouped Operations" ||
+      myDoc.rank === "Head of Solo Operations";
+  }
+
+  function nameOf(uid) {
+    for (var i = 0; i < allUsers.length; i++) {
+      if (allUsers[i]._id === uid) return allUsers[i].username;
+    }
+    return "Unknown";
+  }
+
+  function initComms() {
+    teardownComms();
+    var uid = auth.currentUser.uid;
+
+    // Rank chat: create-or-refresh, then it's always first in the list.
+    db.collection("chats").doc("rank-" + slugRank(myDoc.rank)).set({
+      type: "rank", rank: myDoc.rank, name: myDoc.rank, owner: "", members: [], invited: []
+    }, { merge: true }).catch(function () {});
+
+    commsUnsubs.push(db.collection("chats").where("members", "array-contains", uid).onSnapshot(function (qs) {
+      myChats = [];
+      qs.forEach(function (d) { var c = d.data(); c._id = d.id; myChats.push(c); });
+      renderChatList();
+      renderHeadArea();
+      if (currentChat && currentChat.type !== "rank") {
+        var still = myChats.filter(function (c) { return c._id === currentChat._id; })[0];
+        if (!still) closeChat(); else { currentChat = still; renderChatHeader(); }
+      }
+    }));
+
+    commsUnsubs.push(db.collection("chats").where("invited", "array-contains", uid).onSnapshot(function (qs) {
+      myInvites = [];
+      qs.forEach(function (d) { var c = d.data(); c._id = d.id; myInvites.push(c); });
+      renderInvites();
+    }));
+
+    db.collection("users").get().then(function (qs) {
+      allUsers = [];
+      qs.forEach(function (d) {
+        var u = d.data(); u._id = d.id;
+        allUsers.push(u);
+        if (u.admin) headUid = d.id;
+      });
+      renderChatList();
+      renderHeadArea();
+      renderGroupCreate();
+    }).catch(function () {});
+
+    if (myDoc.admin) {
+      commsUnsubs.push(db.collection("dmRequests").where("status", "==", "pending").onSnapshot(function (qs) {
+        pendingReqs = [];
+        qs.forEach(function (d) { var r = d.data(); r._id = d.id; pendingReqs.push(r); });
+        renderRequests();
+      }));
+    } else {
+      commsUnsubs.push(db.collection("dmRequests").doc(uid).onSnapshot(function (s) {
+        myRequest = s.exists ? s.data() : null;
+        renderHeadArea();
+      }, function () {}));
+    }
+
+    closeChat();
+    renderChatList();
+    renderHeadArea();
+    renderGroupCreate();
+  }
+
+  /* ----- sidebar ----- */
+  function renderChatList() {
+    var box = $("chat-list");
+    box.innerHTML = "";
+    box.appendChild(chatItem({ _id: "rank-" + slugRank(myDoc.rank), type: "rank", rank: myDoc.rank, name: myDoc.rank, members: [], owner: "" }, "RANK CHAT"));
+    myChats.forEach(function (c) {
+      var label = c.type === "dm" ? "DIRECT" : "GROUP";
+      box.appendChild(chatItem(c, label));
+    });
+  }
+
+  function chatItem(chat, label) {
+    var el = document.createElement("div");
+    el.className = "chat-item" + (currentChat && currentChat._id === chat._id ? " active-chat" : "");
+    var type = document.createElement("span");
+    type.className = "chat-type";
+    type.textContent = label;
+    var name = document.createElement("span");
+    name.textContent = chatDisplayName(chat);
+    el.appendChild(type);
+    el.appendChild(name);
+    el.addEventListener("click", function () { openChat(chat); });
+    return el;
+  }
+
+  function chatDisplayName(chat) {
+    if (chat.type === "rank") return "# " + chat.rank;
+    if (chat.type === "dm") {
+      var me = auth.currentUser.uid;
+      var other = (chat.members || []).filter(function (m) { return m !== me; })[0];
+      return other ? nameOf(other) : "Direct message";
+    }
+    return chat.name || "Group";
+  }
+
+  function renderInvites() {
+    var box = $("invite-list");
+    box.innerHTML = "";
+    if (!myInvites.length) return;
+    var label = document.createElement("p");
+    label.className = "comms-side-label";
+    label.textContent = "Invites";
+    box.appendChild(label);
+    myInvites.forEach(function (c) {
+      var item = document.createElement("div");
+      item.className = "invite-item";
+      var txt = document.createElement("div");
+      txt.textContent = (c.name || "Group") + " — invited by " + nameOf(c.owner);
+      item.appendChild(txt);
+      item.appendChild(rowButton("Accept", "approve", function () {
+        db.collection("chats").doc(c._id).update({
+          members: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.uid),
+          invited: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.uid)
+        });
+      }));
+      item.appendChild(rowButton("Decline", "danger", function () {
+        db.collection("chats").doc(c._id).update({
+          invited: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.uid)
+        });
+      }));
+      box.appendChild(item);
+    });
+  }
+
+  /* ----- messaging the Head ----- */
+  function headDmId() {
+    return "dm-" + [auth.currentUser.uid, headUid].sort().join("-");
+  }
+
+  function openHeadDm() {
+    var uid = auth.currentUser.uid;
+    db.collection("chats").doc(headDmId()).set({
+      type: "dm", name: "", rank: "", owner: "",
+      members: [uid, headUid].sort(), invited: []
+    }, { merge: true }).catch(function () {
+      window.alert("Could not open the line — if you just got accepted, try refreshing.");
+    });
+  }
+
+  function renderHeadArea() {
+    var box = $("head-dm-area");
+    box.innerHTML = "";
+    if (myDoc.admin || !headUid) return;
+    var hasHeadDm = myChats.some(function (c) { return c._id === headDmId(); });
+    if (hasHeadDm) return;
+    if (canDirectDmHead()) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "side-btn green";
+      btn.textContent = "Message the Head of ETOG";
+      btn.addEventListener("click", openHeadDm);
+      box.appendChild(btn);
+      return;
+    }
+    var status = myRequest && myRequest.status;
+    if (status === "pending") {
+      var p = document.createElement("p");
+      p.className = "side-note";
+      p.textContent = "⏳ Request to message the Head is pending…";
+      box.appendChild(p);
+    } else if (status === "accepted") {
+      var open = document.createElement("button");
+      open.type = "button";
+      open.className = "side-btn green";
+      open.textContent = "Message the Head of ETOG";
+      open.addEventListener("click", openHeadDm);
+      box.appendChild(open);
+    } else {
+      if (status === "declined") {
+        var d = document.createElement("p");
+        d.className = "side-note";
+        d.textContent = "❌ Your last request was declined.";
+        box.appendChild(d);
+      }
+      var req = document.createElement("button");
+      req.type = "button";
+      req.className = "side-btn";
+      req.textContent = "Request to Message the Head";
+      req.addEventListener("click", function () {
+        var uid = auth.currentUser.uid;
+        var ref = db.collection("dmRequests").doc(uid);
+        var create = function () {
+          ref.set({ fromUid: uid, fromName: myDoc.username, status: "pending", createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        };
+        if (status === "declined") ref.delete().then(create); else create();
+      });
+      box.appendChild(req);
+    }
+  }
+
+  /* ----- admin: requests + new DM ----- */
+  function renderRequests() {
+    var box = $("admin-req-area");
+    box.innerHTML = "";
+    if (!myDoc.admin) return;
+    var label = document.createElement("p");
+    label.className = "comms-side-label";
+    label.textContent = "Message Requests" + (pendingReqs.length ? " (" + pendingReqs.length + ")" : "");
+    box.appendChild(label);
+    if (!pendingReqs.length) {
+      var none = document.createElement("p");
+      none.className = "side-note";
+      none.textContent = "No pending requests.";
+      box.appendChild(none);
+    }
+    pendingReqs.forEach(function (r) {
+      var item = document.createElement("div");
+      item.className = "req-item";
+      var txt = document.createElement("div");
+      txt.textContent = r.fromName + " wants to message you";
+      item.appendChild(txt);
+      item.appendChild(rowButton("Accept", "approve", function () {
+        db.collection("dmRequests").doc(r._id).update({ status: "accepted" }).then(function () {
+          var id = "dm-" + [r.fromUid, auth.currentUser.uid].sort().join("-");
+          return db.collection("chats").doc(id).set({
+            type: "dm", name: "", rank: "", owner: "",
+            members: [r.fromUid, auth.currentUser.uid].sort(), invited: []
+          }, { merge: true });
+        });
+      }));
+      item.appendChild(rowButton("Decline", "danger", function () {
+        db.collection("dmRequests").doc(r._id).update({ status: "declined" });
+      }));
+      box.appendChild(item);
+    });
+    // admin can open a DM with anyone
+    var pick = document.createElement("select");
+    pick.className = "rank-select";
+    pick.style.width = "100%";
+    pick.style.marginBottom = "8px";
+    var def = document.createElement("option");
+    def.value = "";
+    def.textContent = "Open a DM with…";
+    pick.appendChild(def);
+    allUsers.filter(function (u) { return u._id !== auth.currentUser.uid && u.verified && !u.banned; })
+      .forEach(function (u) {
+        var o = document.createElement("option");
+        o.value = u._id;
+        o.textContent = u.username;
+        pick.appendChild(o);
+      });
+    pick.addEventListener("change", function () {
+      if (!pick.value) return;
+      var id = "dm-" + [pick.value, auth.currentUser.uid].sort().join("-");
+      db.collection("chats").doc(id).set({
+        type: "dm", name: "", rank: "", owner: "",
+        members: [pick.value, auth.currentUser.uid].sort(), invited: []
+      }, { merge: true });
+      pick.value = "";
+    });
+    box.appendChild(pick);
+  }
+
+  /* ----- leader group creation ----- */
+  function renderGroupCreate() {
+    var box = $("group-create-area");
+    box.innerHTML = "";
+    var controlled = LEADER_CONTROL[myDoc.rank];
+    if (!controlled) return;
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "side-btn";
+    btn.textContent = "+ Create Group";
+    box.appendChild(btn);
+    var panel = document.createElement("div");
+    panel.className = "picker-panel";
+    panel.style.display = "none";
+    box.appendChild(panel);
+
+    btn.addEventListener("click", function () {
+      if (panel.style.display === "none") {
+        panel.style.display = "block";
+        buildPanel();
+      } else {
+        panel.style.display = "none";
+      }
+    });
+
+    function buildPanel() {
+      panel.innerHTML = "";
+      var nameInput = document.createElement("input");
+      nameInput.type = "text";
+      nameInput.className = "field";
+      nameInput.maxLength = 40;
+      nameInput.placeholder = "Group name";
+      panel.appendChild(nameInput);
+      var candidates = allUsers.filter(function (u) {
+        return controlled.indexOf(u.rank) !== -1 && u.verified && !u.banned && u._id !== auth.currentUser.uid;
+      });
+      if (!candidates.length) {
+        var none = document.createElement("p");
+        none.className = "side-note";
+        none.textContent = "Nobody under your command yet.";
+        panel.appendChild(none);
+        return;
+      }
+      var checks = [];
+      candidates.forEach(function (u) {
+        var lab = document.createElement("label");
+        lab.className = "pick-row";
+        var cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.value = u._id;
+        checks.push(cb);
+        lab.appendChild(cb);
+        lab.appendChild(document.createTextNode(u.username + " (" + u.rank + ")"));
+        panel.appendChild(lab);
+      });
+      var create = document.createElement("button");
+      create.type = "button";
+      create.className = "side-btn green";
+      create.style.marginTop = "8px";
+      create.textContent = "Create & Send Invites";
+      create.addEventListener("click", function () {
+        var name = nameInput.value.trim();
+        var picked = checks.filter(function (c) { return c.checked; }).map(function (c) { return c.value; });
+        if (!name) { window.alert("Give the group a name."); return; }
+        if (!picked.length) { window.alert("Pick at least one member to invite."); return; }
+        db.collection("chats").add({
+          type: "group", name: name, rank: "", owner: auth.currentUser.uid,
+          members: [auth.currentUser.uid], invited: picked,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(function () {
+          panel.style.display = "none";
+        });
+      });
+      panel.appendChild(create);
+    }
+  }
+
+  /* ----- open chat / messages ----- */
+  function closeChat() {
+    if (msgUnsub) { try { msgUnsub(); } catch (e) {} msgUnsub = null; }
+    currentChat = null;
+    $("chat-title").textContent = "Select a channel";
+    $("chat-actions").innerHTML = "";
+    $("chat-input-row").style.display = "none";
+    $("chat-messages").innerHTML = '<p class="empty-note" style="padding:16px;">Pick a channel on the left to start talking.</p>';
+    renderChatList();
+  }
+
+  function openChat(chat) {
+    if (msgUnsub) { try { msgUnsub(); } catch (e) {} }
+    currentChat = chat;
+    renderChatList();
+    renderChatHeader();
+    $("chat-input-row").style.display = "flex";
+    $("chat-messages").innerHTML = '<p class="empty-note" style="padding:16px;">Loading&#8230;</p>';
+    msgUnsub = db.collection("chats").doc(chat._id).collection("messages")
+      .orderBy("createdAt", "asc").limitToLast(60)
+      .onSnapshot(function (qs) {
+        var box = $("chat-messages");
+        box.innerHTML = "";
+        if (qs.empty) {
+          box.innerHTML = '<p class="empty-note" style="padding:16px;">No messages yet. Say something.</p>';
+          return;
+        }
+        var me = auth.currentUser.uid;
+        qs.forEach(function (d) {
+          var m = d.data();
+          var row = document.createElement("div");
+          row.className = "msg" + (m.uid === me ? " mine" : "") + (m.announcement ? " announcement" : "");
+          var user = document.createElement("span");
+          user.className = "msg-user";
+          user.textContent = m.username || "?";
+          var text = document.createElement("span");
+          text.className = "msg-text";
+          text.textContent = (m.announcement ? "📣 " : "") + m.text;
+          var time = document.createElement("span");
+          time.className = "msg-time";
+          time.textContent = (m.createdAt && m.createdAt.toDate)
+            ? m.createdAt.toDate().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+            : "";
+          row.appendChild(user);
+          row.appendChild(text);
+          row.appendChild(time);
+          box.appendChild(row);
+        });
+        box.scrollTop = box.scrollHeight;
+      }, function () {
+        $("chat-messages").innerHTML = '<p class="empty-note" style="padding:16px;">Could not load this channel (are the new Firestore rules published?).</p>';
+      });
+  }
+
+  function renderChatHeader() {
+    var chat = currentChat;
+    $("chat-title").textContent = chatDisplayName(chat);
+    var actions = $("chat-actions");
+    actions.innerHTML = "";
+    var amOwner = chat.type === "group" && chat.owner === auth.currentUser.uid;
+    $("announce-wrap").style.display = amOwner ? "inline-block" : "none";
+    if (!amOwner) $("announce-check").checked = false;
+    if (!amOwner) return;
+    actions.appendChild(rowButton("Rename", "warn", function () {
+      var name = window.prompt("New group name:", chat.name || "");
+      if (name && name.trim()) db.collection("chats").doc(chat._id).update({ name: name.trim() });
+    }));
+    actions.appendChild(rowButton("Members", "approve", function () {
+      var lines = (chat.members || []).map(function (m) {
+        return nameOf(m) + (m === chat.owner ? " (leader)" : "");
+      });
+      var kick = window.prompt("Members:\n" + lines.join("\n") + "\n\nType a username to KICK them, or Cancel:");
+      if (!kick) return;
+      var target = allUsers.filter(function (u) { return u.username.toLowerCase() === kick.trim().toLowerCase(); })[0];
+      if (!target || (chat.members || []).indexOf(target._id) === -1) { window.alert("No member with that username."); return; }
+      if (target._id === chat.owner) { window.alert("You can't kick the leader."); return; }
+      db.collection("chats").doc(chat._id).update({ members: firebase.firestore.FieldValue.arrayRemove(target._id) });
+    }));
+    actions.appendChild(rowButton("Disband", "danger", function () {
+      if (window.confirm("Disband \"" + (chat.name || "this group") + "\"? This cannot be undone.")) {
+        db.collection("chats").doc(chat._id).delete().then(closeChat);
+      }
+    }));
+  }
+
+  function sendMessage() {
+    if (!currentChat) return;
+    var input = $("chat-input");
+    var text = input.value.trim();
+    if (!text) return;
+    var announcement = currentChat.type === "group" && currentChat.owner === auth.currentUser.uid && $("announce-check").checked;
+    db.collection("chats").doc(currentChat._id).collection("messages").add({
+      uid: auth.currentUser.uid,
+      username: myDoc.username,
+      text: text,
+      announcement: announcement,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).catch(function () {
+      window.alert("Message failed to send — are the new Firestore rules published?");
+    });
+    input.value = "";
+    input.focus();
+  }
+
+  $("chat-send").addEventListener("click", sendMessage);
+  $("chat-input").addEventListener("keydown", function (e) { if (e.key === "Enter") sendMessage(); });
+
   /* ---------------- SECTION SCROLL RESISTANCE ---------------- */
   (function () {
     var THRESHOLD = 340;
@@ -1463,6 +2120,7 @@
 
     window.addEventListener("wheel", function (e) {
       if (!dashboard.classList.contains("active")) return;
+      if (e.target && e.target.closest && e.target.closest("[data-free-scroll]")) return;
       var secs = visibleSections();
       if (!secs.length) return;
       if (animating) { e.preventDefault(); return; }
@@ -1503,7 +2161,10 @@
     db = firebase.firestore();
     auth.onAuthStateChanged(function () {
       if (rosterUnsub) { rosterUnsub(); rosterUnsub = null; }
+      if (shadowMapUnsub) { shadowMapUnsub(); shadowMapUnsub = null; }
+      teardownComms();
       myDoc = null;
+      myShadow = "none";
       route();
     });
   } else {
