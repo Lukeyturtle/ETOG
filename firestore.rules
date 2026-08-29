@@ -18,6 +18,19 @@ service cloud.firestore {
         && myData().rank != "Recruit";
     }
 
+    function shadowActive() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/shadowStatus/$(request.auth.uid))
+        && get(/databases/$(database)/documents/shadowStatus/$(request.auth.uid)).data.status == "active";
+    }
+
+    // Who may see the real identity behind masked ??? messages.
+    function canUnmask() {
+      return isAdmin()
+        || myData().rank == "Head of Solo Operations"
+        || shadowActive();
+    }
+
     match /users/{uid} {
       // Own profile, admins, and any operative (needed for rosters/comms).
       allow read: if request.auth != null && (request.auth.uid == uid || isAdmin() || isOperative());
@@ -39,6 +52,14 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // Real identities behind masked chat messages. Only the Head of ETOG,
+    // the Head of Solo Operations, and Shadow Operatives can read these.
+    match /unmask/{id} {
+      allow read: if isOperative() && canUnmask();
+      allow create: if isOperative() && shadowActive()
+        && request.resource.data.uid == request.auth.uid;
+    }
+
     // Requests to DM the Head. Doc id = requester uid.
     match /dmRequests/{uid} {
       allow read: if request.auth != null && (request.auth.uid == uid || isAdmin());
@@ -56,15 +77,11 @@ service cloud.firestore {
       function sameRankChat() {
         return resource.data.type == "rank" && resource.data.rank == myData().rank;
       }
-      function myShadowActive() {
-        return exists(/databases/$(database)/documents/shadowStatus/$(request.auth.uid))
-          && get(/databases/$(database)/documents/shadowStatus/$(request.auth.uid)).data.status == "active";
-      }
       function canDirectDm() {
         return isAdmin()
           || myData().rank == "Head of Grouped Operations"
           || myData().rank == "Head of Solo Operations"
-          || myShadowActive();
+          || shadowActive();
       }
       function dmRequestAccepted() {
         return exists(/databases/$(database)/documents/dmRequests/$(request.auth.uid))
@@ -105,7 +122,8 @@ service cloud.firestore {
           || request.auth.uid in chat().members
         );
         allow create: if isOperative()
-          && request.resource.data.uid == request.auth.uid
+          && (request.resource.data.uid == request.auth.uid
+            || (request.resource.data.uid == "masked" && shadowActive()))
           && request.resource.data.text is string
           && request.resource.data.text.size() > 0
           && request.resource.data.text.size() <= 1000

@@ -720,6 +720,7 @@
   .msg { padding: 6px 8px; margin-bottom: 4px; border-left: 2px solid transparent; }
   .msg .msg-user { font-weight: 700; color: var(--cyan); margin-right: 8px; font-size: 0.85rem; }
   .msg.mine .msg-user { color: var(--accent); }
+  .msg .msg-user.ghost { color: var(--amber); }
   .msg .msg-time { color: var(--text-sub); font-size: 0.65rem; margin-left: 8px; }
   .msg .msg-text { color: var(--text-main); font-size: 0.9rem; overflow-wrap: break-word; }
   .msg.announcement { border-left-color: var(--amber); background: rgba(255, 179, 71, 0.07); }
@@ -1059,6 +1060,7 @@
           <div class="card">
             <h3><span class="spec-tag" style="color: var(--amber);">REQUIRED</span>Prepare Yourself</h3>
             <ul class="tac-list">
+              <li><strong>Solo Operations Route:</strong> Shadow Operatives are selected exclusively from the Solo Operations branch. If you want a chance, that is the path you climb.</li>
               <li><strong>DX Gamepass:</strong> Owning the DX gamepass is required for acceptance. No DX, no Shadow Division.</li>
               <li><strong>Tactical Excellence:</strong> Selection is based on proven tactical operations skill, not kill counts.</li>
             </ul>
@@ -1089,6 +1091,7 @@
               <li><strong>Civilian Deployment:</strong> You are cleared to deploy as a civilian during operations.</li>
               <li><strong>Neutral Allegiance:</strong> You do not work for the plant, and you do not work for the WN. You are neutral — you work for ETOG and ETOG alone.</li>
               <li><strong>Tactical Command:</strong> Your role is mostly tactical planning and less combat — though you will still see a fair amount of action.</li>
+              <li><strong>Masked Identity:</strong> In rank and group chats you appear as <strong>???</strong>. Only the Head of ETOG, the Head of Solo Operations, and fellow Shadow Operatives can see who you really are.</li>
             </ul>
           </div>
           <div class="card">
@@ -1616,6 +1619,12 @@
         shadowSel.appendChild(o);
       });
       shadowSel.addEventListener("change", function () {
+        if (shadowSel.value === "active" && SOLO_ROUTE.indexOf(u.rank) === -1) {
+          if (!window.confirm(u.username + " is not on the Solo Operations route (rank: " + u.rank + "). Shadow Division normally requires it. Select them anyway?")) {
+            shadowSel.value = currentShadow;
+            return;
+          }
+        }
         db.collection("shadowStatus").doc(u._id).set({ status: shadowSel.value });
       });
       specRow.appendChild(shadowSel);
@@ -1647,13 +1656,19 @@
   }
 
   /* ---------------- COMMS ---------------- */
-  var commsUnsubs = [], msgUnsub = null, currentChat = null;
+  var commsUnsubs = [], msgUnsub = null, unmaskUnsub = null, currentChat = null;
+  var SOLO_ROUTE = ["Head of Solo Operations", "Elite Solo Commander", "Solo Commander", "Elite Solo Operator", "Solo Operator"];
+
+  function canSeeShadowIdentities() {
+    return myDoc.admin || myDoc.rank === "Head of Solo Operations" || myShadow === "active";
+  }
   var myChats = [], myInvites = [], allUsers = [], headUid = null, myRequest = null, pendingReqs = [];
 
   function teardownComms() {
     commsUnsubs.forEach(function (u) { try { u(); } catch (e) {} });
     commsUnsubs = [];
     if (msgUnsub) { try { msgUnsub(); } catch (e) {} msgUnsub = null; }
+    if (unmaskUnsub) { try { unmaskUnsub(); } catch (e) {} unmaskUnsub = null; }
     currentChat = null;
     myChats = []; myInvites = []; allUsers = []; headUid = null; myRequest = null; pendingReqs = [];
   }
@@ -2003,6 +2018,7 @@
   /* ----- open chat / messages ----- */
   function closeChat() {
     if (msgUnsub) { try { msgUnsub(); } catch (e) {} msgUnsub = null; }
+    if (unmaskUnsub) { try { unmaskUnsub(); } catch (e) {} unmaskUnsub = null; }
     currentChat = null;
     $("chat-title").textContent = "Select a channel";
     $("chat-actions").innerHTML = "";
@@ -2013,45 +2029,75 @@
 
   function openChat(chat) {
     if (msgUnsub) { try { msgUnsub(); } catch (e) {} }
+    if (unmaskUnsub) { try { unmaskUnsub(); } catch (e) {} unmaskUnsub = null; }
     currentChat = chat;
     renderChatList();
     renderChatHeader();
     $("chat-input-row").style.display = "flex";
     $("chat-messages").innerHTML = '<p class="empty-note" style="padding:16px;">Loading&#8230;</p>';
+
+    var latestMsgs = null;
+    var unmaskMap = {};
+
+    function renderMessages() {
+      var box = $("chat-messages");
+      if (latestMsgs === null) return;
+      box.innerHTML = "";
+      if (!latestMsgs.length) {
+        box.innerHTML = '<p class="empty-note" style="padding:16px;">No messages yet. Say something.</p>';
+        return;
+      }
+      var me = auth.currentUser.uid;
+      latestMsgs.forEach(function (entry) {
+        var m = entry.data;
+        var masked = m.uid === "masked";
+        var row = document.createElement("div");
+        row.className = "msg" + (m.uid === me ? " mine" : "") + (m.announcement ? " announcement" : "");
+        var user = document.createElement("span");
+        user.className = "msg-user" + (masked ? " ghost" : "");
+        if (masked) {
+          user.textContent = unmaskMap[entry.id] ? "??? · " + unmaskMap[entry.id] : "???";
+        } else {
+          user.textContent = m.username || "?";
+        }
+        var text = document.createElement("span");
+        text.className = "msg-text";
+        text.textContent = (m.announcement ? "📣 " : "") + m.text;
+        var time = document.createElement("span");
+        time.className = "msg-time";
+        time.textContent = (m.createdAt && m.createdAt.toDate)
+          ? m.createdAt.toDate().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+          : "";
+        row.appendChild(user);
+        row.appendChild(text);
+        row.appendChild(time);
+        box.appendChild(row);
+      });
+      box.scrollTop = box.scrollHeight;
+    }
+
     msgUnsub = db.collection("chats").doc(chat._id).collection("messages")
       .orderBy("createdAt", "asc").limitToLast(60)
       .onSnapshot(function (qs) {
-        var box = $("chat-messages");
-        box.innerHTML = "";
-        if (qs.empty) {
-          box.innerHTML = '<p class="empty-note" style="padding:16px;">No messages yet. Say something.</p>';
-          return;
-        }
-        var me = auth.currentUser.uid;
-        qs.forEach(function (d) {
-          var m = d.data();
-          var row = document.createElement("div");
-          row.className = "msg" + (m.uid === me ? " mine" : "") + (m.announcement ? " announcement" : "");
-          var user = document.createElement("span");
-          user.className = "msg-user";
-          user.textContent = m.username || "?";
-          var text = document.createElement("span");
-          text.className = "msg-text";
-          text.textContent = (m.announcement ? "📣 " : "") + m.text;
-          var time = document.createElement("span");
-          time.className = "msg-time";
-          time.textContent = (m.createdAt && m.createdAt.toDate)
-            ? m.createdAt.toDate().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-            : "";
-          row.appendChild(user);
-          row.appendChild(text);
-          row.appendChild(time);
-          box.appendChild(row);
-        });
-        box.scrollTop = box.scrollHeight;
+        latestMsgs = [];
+        qs.forEach(function (d) { latestMsgs.push({ id: d.id, data: d.data() }); });
+        renderMessages();
       }, function () {
         $("chat-messages").innerHTML = '<p class="empty-note" style="padding:16px;">Could not load this channel (are the new Firestore rules published?).</p>';
       });
+
+    // Privileged viewers can resolve masked identities.
+    if (canSeeShadowIdentities()) {
+      unmaskUnsub = db.collection("unmask").where("chatId", "==", chat._id)
+        .onSnapshot(function (qs) {
+          unmaskMap = {};
+          qs.forEach(function (d) {
+            var u = d.data();
+            unmaskMap[u.msgId] = u.username;
+          });
+          renderMessages();
+        }, function () {});
+    }
   }
 
   function renderChatHeader() {
@@ -2091,12 +2137,24 @@
     var text = input.value.trim();
     if (!text) return;
     var announcement = currentChat.type === "group" && currentChat.owner === auth.currentUser.uid && $("announce-check").checked;
-    db.collection("chats").doc(currentChat._id).collection("messages").add({
-      uid: auth.currentUser.uid,
-      username: myDoc.username,
+    // Shadow operatives are anonymous in shared channels (not in DMs).
+    var mask = myShadow === "active" && currentChat.type !== "dm";
+    var chatId = currentChat._id;
+    db.collection("chats").doc(chatId).collection("messages").add({
+      uid: mask ? "masked" : auth.currentUser.uid,
+      username: mask ? "???" : myDoc.username,
       text: text,
       announcement: announcement,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(function (ref) {
+      if (mask) {
+        return db.collection("unmask").doc(chatId + "_" + ref.id).set({
+          chatId: chatId,
+          msgId: ref.id,
+          uid: auth.currentUser.uid,
+          username: myDoc.username
+        });
+      }
     }).catch(function () {
       window.alert("Message failed to send — are the new Firestore rules published?");
     });
