@@ -646,13 +646,12 @@
     background: var(--cyan-dim);
   }
 
-  .spec-toggle.shadow:hover { border-color: rgba(255, 179, 71, 0.6); }
-
-  .spec-toggle.shadow.on {
+  .shadow-select {
     color: var(--amber);
-    border-color: rgba(255, 179, 71, 0.6);
-    background: rgba(255, 179, 71, 0.12);
+    border-color: rgba(255, 179, 71, 0.45);
   }
+
+  .shadow-select:focus { border-color: rgba(255, 179, 71, 0.7); }
 
   .shadow-chip {
     display: inline-block;
@@ -874,8 +873,8 @@
     </div>
   </section>
 
-  <!-- SEC: SHADOW DIVISION (content depends on membership) -->
-  <section class="snap-sec acc-amber tint">
+  <!-- SEC: SHADOW DIVISION (hidden entirely unless cleared to know) -->
+  <section class="snap-sec acc-amber tint" id="shadow-section" style="display:none;">
     <div class="sec-inner">
       <h2 class="section-title">Shadow Division</h2>
       <p class="section-sub" id="shadow-sub">// classified — need-to-know basis</p>
@@ -954,7 +953,6 @@
             <li><strong>Death Exemptions:</strong> Deaths from vehicles or WN camping are wiped from your combat record. Only direct, active combat deaths count.</li>
             <li><strong>Constant Readiness:</strong> No scheduled shifts — log on and secure the plant whenever you wish.</li>
             <li><strong>SOC Deployment:</strong> You may deploy and complete shifts as SOC — they count toward rank progression exactly the same as TRT shifts.</li>
-            <li><strong>Civilian Deployment:</strong> Shadow Division operatives only. If your profile shows the Shadow Division tag, you are cleared to deploy as a civilian.</li>
             <li><strong>Log Everything:</strong> Shifts only count toward promotion if you record them. Submit your shift report immediately after your session ends.</li>
             <li><strong>Honesty Protocol:</strong> Falsified shift reports result in removal from ETOG.</li>
           </ul>
@@ -1120,7 +1118,7 @@
       admin: false,
       banned: false,
       specialities: [],
-      shadowDivision: false,
+      shadowStatus: "none",
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     };
   }
@@ -1245,17 +1243,20 @@
       specsBox.innerHTML = '<span class="empty-note">None yet — earn one at Saturday tryouts.</span>';
     }
 
+    // Shadow status: "none" (section invisible), "aware" (teaser), "active" (full briefing)
+    var shadow = shadowStatusOf(myDoc);
+
     var divBox = $("prof-division");
-    if (myDoc.shadowDivision) {
+    if (shadow === "active") {
       divBox.innerHTML = '<span class="shadow-chip">Shadow Division</span><p style="color: var(--text-sub); font-size: 0.8rem; margin-top: 8px;">Cleared to deploy as a civilian during operations.</p>';
     } else {
       divBox.innerHTML = '<span class="empty-note">Standard operations</span>';
     }
 
-    var isShadow = !!myDoc.shadowDivision;
-    $("shadow-teaser").style.display = isShadow ? "none" : "block";
-    $("shadow-perks").style.display = isShadow ? "block" : "none";
-    $("shadow-sub").textContent = isShadow
+    $("shadow-section").style.display = (shadow === "none") ? "none" : "flex";
+    $("shadow-teaser").style.display = (shadow === "aware") ? "block" : "none";
+    $("shadow-perks").style.display = (shadow === "active") ? "block" : "none";
+    $("shadow-sub").textContent = (shadow === "active")
       ? "// operative briefing — clearance granted"
       : "// classified — need-to-know basis";
 
@@ -1401,17 +1402,36 @@
         });
         specRow.appendChild(chip);
       });
-      var shadowChip = document.createElement("button");
-      shadowChip.type = "button";
-      shadowChip.className = "spec-toggle shadow" + (u.shadowDivision ? " on" : "");
-      shadowChip.textContent = "Shadow Division";
-      shadowChip.addEventListener("click", function () {
-        db.collection("users").doc(u._id).update({ shadowDivision: !u.shadowDivision });
+      var shadowLabel = document.createElement("span");
+      shadowLabel.className = "spec-toggle-label";
+      shadowLabel.textContent = "SHADOW:";
+      shadowLabel.style.marginLeft = "10px";
+      specRow.appendChild(shadowLabel);
+      var shadowSel = document.createElement("select");
+      shadowSel.className = "rank-select shadow-select";
+      [["none", "Hidden (default)"], ["aware", "Knows about it"], ["active", "Active operative"]].forEach(function (opt) {
+        var o = document.createElement("option");
+        o.value = opt[0];
+        o.textContent = opt[1];
+        if (opt[0] === shadowStatusOf(u)) o.selected = true;
+        shadowSel.appendChild(o);
       });
-      specRow.appendChild(shadowChip);
+      shadowSel.addEventListener("change", function () {
+        db.collection("users").doc(u._id).update({
+          shadowStatus: shadowSel.value,
+          shadowDivision: shadowSel.value === "active"
+        });
+      });
+      specRow.appendChild(shadowSel);
       row.appendChild(specRow);
       box.appendChild(row);
     });
+  }
+
+  function shadowStatusOf(u) {
+    if (u.shadowStatus === "aware" || u.shadowStatus === "active") return u.shadowStatus;
+    if (u.shadowDivision) return "active"; // accounts from before the 3-level system
+    return "none";
   }
 
   function makeBadge(cls, text) {
