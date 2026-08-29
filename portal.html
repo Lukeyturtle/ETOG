@@ -980,6 +980,9 @@
       <h3 class="admin-h3" style="color: var(--amber);">Awaiting Verification <span id="pending-count"></span></h3>
       <div id="pending-list"><p class="empty-note">No accounts waiting for verification.</p></div>
 
+      <h3 class="admin-h3" style="color: var(--cyan); margin-top: 26px;">Medical Division Applications <span id="med-app-count"></span></h3>
+      <div id="med-apps-list"><p class="empty-note">No applications.</p></div>
+
       <h3 class="admin-h3" style="color: var(--accent); margin-top: 26px;">Full Roster</h3>
       <div id="roster-list"><p class="empty-note">Loading roster&#8230;</p></div>
     </div>
@@ -1107,6 +1110,105 @@
     </div>
   </section>
 
+  <!-- SEC: MEDICAL DIVISION (Elite Solo Commanders + active members) -->
+  <section class="snap-sec acc-cyan" id="medical-section" style="display:none;">
+    <div class="sec-inner">
+      <h2 class="section-title">Medical Division</h2>
+      <p class="section-sub">// classified — elite solo commanders only</p>
+      <div id="med-teaser" style="display:none;">
+        <p class="cta-text">The Medical Division handles medical operations during ETOG deployments. As an Elite Solo Commander, you are eligible to apply directly to the Head of ETOG.</p>
+        <div class="card-grid">
+          <div class="card">
+            <h3><span class="spec-tag" style="color: var(--cyan);">REQUIRED</span>Entry Requirements</h3>
+            <ul class="tac-list">
+              <li><strong>GSFM Role:</strong> Must have the in-game GSFM role unlocked.</li>
+              <li><strong>XP Milestone:</strong> Must have at least 10,000 XP on GSFM.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3><span class="spec-tag" style="color: var(--cyan);">PERKS</span>What You Get</h3>
+            <ul class="tac-list">
+              <li><strong>GSFM Deployment:</strong> Spawn as GSFM during ETOG operations.</li>
+              <li><strong>Medical Operations:</strong> Run medical support for the faction in the field.</li>
+            </ul>
+          </div>
+        </div>
+        <div id="med-apply-area" style="margin-top: 22px;"></div>
+      </div>
+      <div id="med-active" style="display:none;">
+        <p class="cta-text">Your application was approved. You are a cleared medical operative of ETOG.</p>
+        <div class="card">
+          <h3><span class="spec-tag" style="color: var(--cyan);">CLEARANCES</span>Your Perks</h3>
+          <ul class="tac-list">
+            <li><strong>GSFM Deployment:</strong> You may spawn as GSFM during ETOG operations.</li>
+            <li><strong>Medical Operations:</strong> You run medical support for the faction in the field.</li>
+            <li><strong>Secrecy:</strong> The Medical Division is only known to Elite Solo Commanders and its members.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEC: HEAVY DIVISION (ESC recruiters + active members) -->
+  <section class="snap-sec acc-blue" id="heavy-section" style="display:none;">
+    <div class="sec-inner">
+      <h2 class="section-title">Heavy Division</h2>
+      <p class="section-sub">// classified — recruitment by contact only</p>
+      <div id="heavy-active" style="display:none;">
+        <p class="cta-text">You were contacted, you passed the tryout, and now you roll heavy.</p>
+        <div class="card">
+          <h3><span class="spec-tag" style="color: var(--blue);">CLEARANCES</span>Your Perks</h3>
+          <ul class="tac-list">
+            <li><strong>13th ACR Deployment:</strong> You may spawn as 13th ACR during ETOG operations.</li>
+            <li><strong>Heavy Operations:</strong> Armor and heavy support work for the faction.</li>
+            <li><strong>Secrecy:</strong> Nobody applies to the Heavy Division. Members are contacted by an Elite Solo Commander.</li>
+          </ul>
+        </div>
+      </div>
+      <div id="heavy-esc" style="display:none;">
+        <p class="cta-text">As an Elite Solo Commander you hold recruitment authority for the Heavy Division. You contact the candidate, you host the tryout, and you grant the role.</p>
+        <div class="card">
+          <h3><span class="spec-tag" style="color: var(--blue);">AUTHORITY</span>Grant / Revoke Heavy Division</h3>
+          <div id="heavy-grant-area"><p class="empty-note">Loading&#8230;</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEC: CORPORATE DIVISION (active members only) -->
+  <section class="snap-sec acc-amber tint" id="corporate-section" style="display:none;">
+    <div class="sec-inner">
+      <h2 class="section-title">Corporate Division</h2>
+      <p class="section-sub">// classified — hand-picked by the head of etog</p>
+      <p class="cta-text">You were personally selected by the Head of ETOG from the Heads of Grouped Operations. This division does not exist to anyone else.</p>
+      <div class="card">
+        <h3><span class="spec-tag" style="color: var(--amber);">CLEARANCES</span>Your Perks</h3>
+        <ul class="tac-list">
+          <li><strong>Corporate Deployment:</strong> You may spawn as Corporate during ETOG operations.</li>
+          <li><strong>Selection:</strong> Only Heads of Grouped Operations may ever be chosen, and only by the Head of ETOG personally.</li>
+          <li><strong>Secrecy:</strong> Membership is never announced.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEC: JUSTICE DIVISION (active members only) -->
+  <section class="snap-sec acc-cyan tint" id="justice-section" style="display:none;">
+    <div class="sec-inner">
+      <h2 class="section-title">Justice Division</h2>
+      <p class="section-sub">// classified — you are no longer a normal role</p>
+      <p class="cta-text">The Head of ETOG contacted you, and you met the bar: LMP role access with at least 10,000 XP on it. You now stand outside the standard hierarchy — Justice Operative is a separate role of its own.</p>
+      <div class="card">
+        <h3><span class="spec-tag" style="color: var(--cyan);">CLEARANCES</span>Your Perks</h3>
+        <ul class="tac-list">
+          <li><strong>Justice Operations:</strong> You conduct justice operations as LMP.</li>
+          <li><strong>Separate Role:</strong> You are no longer a normal ETOG role — Justice Operative replaces your standard rank.</li>
+          <li><strong>Secrecy:</strong> The Justice Division is known only to its members and the Head of ETOG.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
   <!-- SEC: OPERATIONS BRIEFING -->
   <section class="snap-sec tint">
     <div class="sec-inner">
@@ -1193,9 +1295,16 @@
     "Solo Commander",
     "Elite Solo Operator",
     "Solo Operator",
+    "Justice Operative",
     "Operator",
     "Recruit"
   ];
+  var DIVISION_KEYS = ["medical", "heavy", "corporate", "justice"];
+  var DIVISION_LABELS = { medical: "MED", heavy: "HVY", corporate: "CORP", justice: "JUS" };
+  var myDivisions = { medical: "none", heavy: "none", corporate: "none", justice: "none" };
+  var myMedRequest = null;
+  var divisionMaps = { medical: {}, heavy: {}, corporate: {}, justice: {} };
+  var divisionUnsubs = [];
   var SPECIALITIES = ["Black-Ops", "Civilian Work", "CHP Expertise", "CR Expertise", "PD Guarding"];
 
   var $ = function (id) { return document.getElementById(id); };
@@ -1373,11 +1482,27 @@
   function loadMyDoc() {
     var user = auth.currentUser;
     if (!user) { route(); return; }
+    var safeGet = function (path) {
+      return db.doc(path).get().catch(function () { return null; });
+    };
     Promise.all([
       db.collection("users").doc(user.uid).get(),
-      db.collection("shadowStatus").doc(user.uid).get().catch(function () { return null; })
+      safeGet("shadowStatus/" + user.uid),
+      safeGet("medicalStatus/" + user.uid),
+      safeGet("heavyStatus/" + user.uid),
+      safeGet("corporateStatus/" + user.uid),
+      safeGet("justiceStatus/" + user.uid),
+      safeGet("medicalRequests/" + user.uid)
     ]).then(function (snaps) {
       var snap = snaps[0], shadowSnap = snaps[1];
+      var statusOf = function (s) { return (s && s.exists && s.data().status) || "none"; };
+      myDivisions = {
+        medical: statusOf(snaps[2]),
+        heavy: statusOf(snaps[3]),
+        corporate: statusOf(snaps[4]),
+        justice: statusOf(snaps[5])
+      };
+      myMedRequest = (snaps[6] && snaps[6].exists) ? snaps[6].data() : null;
       if (!snap.exists) {
         var uname = (user.email || "unknown").split("@")[0];
         return db.collection("users").doc(user.uid).set(newProfile(uname)).then(loadMyDoc);
@@ -1436,9 +1561,24 @@
     var shadow = myShadow;
 
     var divBox = $("prof-division");
+    divBox.innerHTML = "";
     if (shadow === "active") {
-      divBox.innerHTML = '<span class="shadow-chip">Shadow Division</span><p style="color: var(--text-sub); font-size: 0.8rem; margin-top: 8px;">Cleared to deploy as a civilian during operations.</p>';
-    } else {
+      var sc = document.createElement("span");
+      sc.className = "shadow-chip";
+      sc.textContent = "Shadow Division";
+      divBox.appendChild(sc);
+    }
+    var DIV_NAMES = { medical: "Medical Division", heavy: "Heavy Division", corporate: "Corporate Division", justice: "Justice Division" };
+    DIVISION_KEYS.forEach(function (k) {
+      if (myDivisions[k] === "active") {
+        var chip = document.createElement("span");
+        chip.className = "spec-chip";
+        chip.style.marginTop = "4px";
+        chip.textContent = DIV_NAMES[k];
+        divBox.appendChild(chip);
+      }
+    });
+    if (!divBox.childNodes.length) {
       divBox.innerHTML = '<span class="empty-note">Standard operations</span>';
     }
 
@@ -1448,6 +1588,8 @@
     $("shadow-sub").textContent = (shadow === "active")
       ? "// operative briefing — clearance granted"
       : "// classified — need-to-know basis";
+
+    renderDivisions();
 
     var joined = "—";
     if (myDoc.createdAt && myDoc.createdAt.toDate) {
@@ -1469,6 +1611,20 @@
   function watchRoster() {
     if (rosterUnsub) rosterUnsub();
     if (shadowMapUnsub) shadowMapUnsub();
+    divisionUnsubs.forEach(function (u) { try { u(); } catch (e) {} });
+    divisionUnsubs = [];
+    DIVISION_KEYS.forEach(function (k) {
+      divisionUnsubs.push(db.collection(k + "Status").onSnapshot(function (qs) {
+        divisionMaps[k] = {};
+        qs.forEach(function (d) { divisionMaps[k][d.id] = d.data().status; });
+        if (latestRoster) renderRoster(latestRoster);
+      }, function () {}));
+    });
+    divisionUnsubs.push(db.collection("medicalRequests").where("status", "==", "pending").onSnapshot(function (qs) {
+      var apps = [];
+      qs.forEach(function (d) { var r = d.data(); r._id = d.id; apps.push(r); });
+      renderMedApps(apps);
+    }, function () {}));
     shadowMapUnsub = db.collection("shadowStatus").onSnapshot(function (qs) {
       shadowMap = {};
       qs.forEach(function (d) { shadowMap[d.id] = d.data().status; });
@@ -1487,6 +1643,40 @@
       renderRoster(roster);
     }, function () {
       $("roster-list").innerHTML = '<p class="empty-note">Could not load roster (check your Firestore rules).</p>';
+    });
+  }
+
+  function renderMedApps(apps) {
+    $("med-app-count").textContent = apps.length ? "(" + apps.length + ")" : "";
+    var box = $("med-apps-list");
+    box.innerHTML = "";
+    if (!apps.length) {
+      box.innerHTML = '<p class="empty-note">No applications.</p>';
+      return;
+    }
+    apps.forEach(function (r) {
+      var row = document.createElement("div");
+      row.className = "user-row pending-row";
+      var main = document.createElement("div");
+      main.className = "user-main";
+      var name = document.createElement("span");
+      name.className = "user-name";
+      name.textContent = r.fromName;
+      main.appendChild(name);
+      main.appendChild(makeBadge("pending", "Medical Application"));
+      var controls = document.createElement("div");
+      controls.className = "user-controls";
+      controls.appendChild(rowButton("Approve", "approve", function () {
+        db.collection("medicalStatus").doc(r._id).set({ status: "active" }).then(function () {
+          return db.collection("medicalRequests").doc(r._id).update({ status: "accepted" });
+        });
+      }));
+      controls.appendChild(rowButton("Decline", "danger", function () {
+        db.collection("medicalRequests").doc(r._id).update({ status: "declined" });
+      }));
+      main.appendChild(controls);
+      row.appendChild(main);
+      box.appendChild(row);
     });
   }
 
@@ -1628,8 +1818,176 @@
         db.collection("shadowStatus").doc(u._id).set({ status: shadowSel.value });
       });
       specRow.appendChild(shadowSel);
+
+      DIVISION_KEYS.forEach(function (k) {
+        var dl = document.createElement("span");
+        dl.className = "spec-toggle-label";
+        dl.textContent = DIVISION_LABELS[k] + ":";
+        dl.style.marginLeft = "8px";
+        specRow.appendChild(dl);
+        var dSel = document.createElement("select");
+        dSel.className = "rank-select";
+        var cur = divisionMaps[k][u._id] || "none";
+        [["none", "—"], ["active", "Active"]].forEach(function (opt) {
+          var o = document.createElement("option");
+          o.value = opt[0];
+          o.textContent = opt[1];
+          if (opt[0] === cur) o.selected = true;
+          dSel.appendChild(o);
+        });
+        dSel.addEventListener("change", function () {
+          db.collection(k + "Status").doc(u._id).set({ status: dSel.value });
+        });
+        specRow.appendChild(dSel);
+      });
+
       row.appendChild(specRow);
       box.appendChild(row);
+    });
+  }
+
+  /* ---------------- SECRET DIVISIONS ---------------- */
+  function renderDivisions() {
+    var esc = myDoc.rank === "Elite Solo Commander";
+
+    var medActive = myDivisions.medical === "active";
+    $("medical-section").style.display = (medActive || esc) ? "flex" : "none";
+    $("med-active").style.display = medActive ? "block" : "none";
+    $("med-teaser").style.display = (!medActive && esc) ? "block" : "none";
+    if (!medActive && esc) renderMedApply();
+
+    var hvyActive = myDivisions.heavy === "active";
+    $("heavy-section").style.display = (hvyActive || esc) ? "flex" : "none";
+    $("heavy-active").style.display = hvyActive ? "block" : "none";
+    $("heavy-esc").style.display = esc ? "block" : "none";
+    if (esc) renderHeavyTool();
+
+    $("corporate-section").style.display = myDivisions.corporate === "active" ? "flex" : "none";
+    $("justice-section").style.display = myDivisions.justice === "active" ? "flex" : "none";
+  }
+
+  function renderMedApply() {
+    var box = $("med-apply-area");
+    box.innerHTML = "";
+    var status = myMedRequest && myMedRequest.status;
+    if (status === "pending") {
+      var p = document.createElement("p");
+      p.className = "side-note";
+      p.textContent = "⏳ Your application is with the Head of ETOG. Sit tight.";
+      box.appendChild(p);
+      return;
+    }
+    if (status === "accepted") {
+      var a = document.createElement("p");
+      a.className = "side-note";
+      a.textContent = "✔ Approved — refresh the page to see your clearances.";
+      box.appendChild(a);
+      return;
+    }
+    if (status === "declined") {
+      var d = document.createElement("p");
+      d.className = "side-note";
+      d.textContent = "❌ Your last application was declined. You may apply again.";
+      box.appendChild(d);
+    }
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "btn btn-primary";
+    btn.style.flex = "none";
+    btn.textContent = "Apply to the Head of ETOG";
+    btn.addEventListener("click", function () {
+      var uid = auth.currentUser.uid;
+      var ref = db.collection("medicalRequests").doc(uid);
+      var create = function () {
+        ref.set({ fromUid: uid, fromName: myDoc.username, status: "pending", createdAt: firebase.firestore.FieldValue.serverTimestamp() })
+          .then(function () { myMedRequest = { status: "pending" }; renderMedApply(); })
+          .catch(function () { window.alert("Application failed — are the latest Firestore rules published?"); });
+      };
+      if (status === "declined") ref.delete().then(create); else create();
+    });
+    box.appendChild(btn);
+  }
+
+  function renderHeavyTool() {
+    var box = $("heavy-grant-area");
+    box.innerHTML = '<p class="empty-note">Loading&#8230;</p>';
+    Promise.all([
+      db.collection("users").get(),
+      db.collection("heavyStatus").get()
+    ]).then(function (res) {
+      var users = [];
+      res[0].forEach(function (d) { var u = d.data(); u._id = d.id; users.push(u); });
+      var heavy = {};
+      res[1].forEach(function (d) { heavy[d.id] = d.data().status; });
+      box.innerHTML = "";
+
+      var current = users.filter(function (u) { return heavy[u._id] === "active"; });
+      var label = document.createElement("p");
+      label.className = "comms-side-label";
+      label.textContent = "Current Heavy Operatives";
+      box.appendChild(label);
+      if (!current.length) {
+        var none = document.createElement("p");
+        none.className = "empty-note";
+        none.textContent = "None yet.";
+        box.appendChild(none);
+      }
+      current.forEach(function (u) {
+        var row = document.createElement("div");
+        row.className = "user-row";
+        var main = document.createElement("div");
+        main.className = "user-main";
+        var name = document.createElement("span");
+        name.className = "user-name";
+        name.textContent = u.username;
+        main.appendChild(name);
+        var controls = document.createElement("div");
+        controls.className = "user-controls";
+        controls.appendChild(rowButton("Revoke", "danger", function () {
+          if (window.confirm("Revoke Heavy Division from " + u.username + "?")) {
+            db.collection("heavyStatus").doc(u._id).set({ status: "none" }).then(renderHeavyTool);
+          }
+        }));
+        main.appendChild(controls);
+        row.appendChild(main);
+        box.appendChild(row);
+      });
+
+      var pickLabel = document.createElement("p");
+      pickLabel.className = "comms-side-label";
+      pickLabel.textContent = "Grant After a Passed Tryout";
+      box.appendChild(pickLabel);
+      var pick = document.createElement("select");
+      pick.className = "rank-select";
+      var def = document.createElement("option");
+      def.value = "";
+      def.textContent = "Choose an operative…";
+      pick.appendChild(def);
+      users.filter(function (u) {
+        return u.verified && !u.banned && u.rank !== "Recruit" && heavy[u._id] !== "active" && u._id !== auth.currentUser.uid;
+      }).forEach(function (u) {
+        var o = document.createElement("option");
+        o.value = u._id;
+        o.textContent = u.username + " (" + u.rank + ")";
+        pick.appendChild(o);
+      });
+      var grant = rowButton("Grant Heavy Division", "approve", function () {
+        if (!pick.value) return;
+        db.collection("heavyStatus").doc(pick.value).set({ status: "active" })
+          .then(renderHeavyTool)
+          .catch(function () { window.alert("Grant failed — are the latest Firestore rules published?"); });
+      });
+      grant.style.marginLeft = "8px";
+      var rowWrap = document.createElement("div");
+      rowWrap.style.display = "flex";
+      rowWrap.style.alignItems = "center";
+      rowWrap.style.flexWrap = "wrap";
+      rowWrap.style.gap = "8px";
+      rowWrap.appendChild(pick);
+      rowWrap.appendChild(grant);
+      box.appendChild(rowWrap);
+    }).catch(function () {
+      box.innerHTML = '<p class="empty-note">Could not load (are the latest Firestore rules published?).</p>';
     });
   }
 
@@ -2220,9 +2578,13 @@
     auth.onAuthStateChanged(function () {
       if (rosterUnsub) { rosterUnsub(); rosterUnsub = null; }
       if (shadowMapUnsub) { shadowMapUnsub(); shadowMapUnsub = null; }
+      divisionUnsubs.forEach(function (u) { try { u(); } catch (e) {} });
+      divisionUnsubs = [];
       teardownComms();
       myDoc = null;
       myShadow = "none";
+      myDivisions = { medical: "none", heavy: "none", corporate: "none", justice: "none" };
+      myMedRequest = null;
       route();
     });
   } else {

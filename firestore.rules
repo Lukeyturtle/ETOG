@@ -52,6 +52,41 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    function isEliteSoloCommander() {
+      return isOperative() && myData().rank == "Elite Solo Commander";
+    }
+
+    // Secret division membership. Each member can read only their own doc.
+    match /medicalStatus/{uid} {
+      allow read: if request.auth != null && (request.auth.uid == uid || isAdmin());
+      allow write: if isAdmin();
+    }
+
+    // Heavy Division: Elite Solo Commanders hold recruitment authority.
+    match /heavyStatus/{uid} {
+      allow read: if request.auth != null && (request.auth.uid == uid || isAdmin() || isEliteSoloCommander());
+      allow write: if isAdmin() || isEliteSoloCommander();
+    }
+
+    match /corporateStatus/{uid} {
+      allow read: if request.auth != null && (request.auth.uid == uid || isAdmin());
+      allow write: if isAdmin();
+    }
+
+    match /justiceStatus/{uid} {
+      allow read: if request.auth != null && (request.auth.uid == uid || isAdmin());
+      allow write: if isAdmin();
+    }
+
+    // Medical Division applications: Elite Solo Commanders only.
+    match /medicalRequests/{uid} {
+      allow read: if request.auth != null && (request.auth.uid == uid || isAdmin());
+      allow create: if isEliteSoloCommander() && request.auth.uid == uid
+        && request.resource.data.status == "pending";
+      allow update: if isAdmin();
+      allow delete: if isAdmin() || (request.auth != null && request.auth.uid == uid);
+    }
+
     // Real identities behind masked chat messages. Only the Head of ETOG,
     // the Head of Solo Operations, and Shadow Operatives can read these.
     match /unmask/{id} {
