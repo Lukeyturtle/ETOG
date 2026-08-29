@@ -646,6 +646,27 @@
     background: var(--cyan-dim);
   }
 
+  .spec-toggle.shadow:hover { border-color: rgba(255, 179, 71, 0.6); }
+
+  .spec-toggle.shadow.on {
+    color: var(--amber);
+    border-color: rgba(255, 179, 71, 0.6);
+    background: rgba(255, 179, 71, 0.12);
+  }
+
+  .shadow-chip {
+    display: inline-block;
+    background: var(--bg-panel);
+    border: 1px solid rgba(255, 179, 71, 0.55);
+    border-radius: 3px;
+    padding: 6px 14px;
+    font-size: 0.9rem;
+    color: var(--amber);
+    letter-spacing: 0.5px;
+    font-weight: 700;
+    box-shadow: 0 0 14px rgba(255, 179, 71, 0.12);
+  }
+
   .admin-h3 {
     font-size: 0.85rem;
     letter-spacing: 2px;
@@ -796,6 +817,10 @@
           <div id="prof-specs"><span class="empty-note">None yet — earn one at Saturday tryouts.</span></div>
         </div>
         <div class="card">
+          <p class="stat-label">Division</p>
+          <div id="prof-division"><span class="empty-note">Standard operations</span></div>
+        </div>
+        <div class="card">
           <p class="stat-label">Enlisted Since</p>
           <span class="stat-value" id="prof-joined">—</span>
         </div>
@@ -845,6 +870,10 @@
           <h3><span class="spec-tag">SPEC 05</span>PD Guarding</h3>
           <p class="spec-desc">Elite defensive duty. Holding the PD line against anything that comes at it.</p>
         </div>
+        <div class="card">
+          <h3><span class="spec-tag" style="color: var(--amber);">NO TRYOUT</span>Shadow Division</h3>
+          <p class="spec-desc">The special division for the absolute best at tactical operations, cleared to deploy as civilians. You cannot try out for this — Shadow Operatives are hand-selected by the Head of ETOG.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -870,6 +899,8 @@
           <ul class="tac-list">
             <li><strong>Death Exemptions:</strong> Deaths from vehicles or WN camping are wiped from your combat record. Only direct, active combat deaths count.</li>
             <li><strong>Constant Readiness:</strong> No scheduled shifts — log on and secure the plant whenever you wish.</li>
+            <li><strong>SOC Deployment:</strong> You may deploy and complete shifts as SOC — they count toward rank progression exactly the same as TRT shifts.</li>
+            <li><strong>Civilian Deployment:</strong> Shadow Division operatives only. If your profile shows the Shadow Division tag, you are cleared to deploy as a civilian.</li>
             <li><strong>Log Everything:</strong> Shifts only count toward promotion if you record them. Submit your shift report immediately after your session ends.</li>
             <li><strong>Honesty Protocol:</strong> Falsified shift reports result in removal from ETOG.</li>
           </ul>
@@ -1035,6 +1066,7 @@
       admin: false,
       banned: false,
       specialities: [],
+      shadowDivision: false,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     };
   }
@@ -1157,6 +1189,13 @@
       });
     } else {
       specsBox.innerHTML = '<span class="empty-note">None yet — earn one at Saturday tryouts.</span>';
+    }
+
+    var divBox = $("prof-division");
+    if (myDoc.shadowDivision) {
+      divBox.innerHTML = '<span class="shadow-chip">Shadow Division</span><p style="color: var(--text-sub); font-size: 0.8rem; margin-top: 8px;">Cleared to deploy as a civilian during operations.</p>';
+    } else {
+      divBox.innerHTML = '<span class="empty-note">Standard operations</span>';
     }
 
     var joined = "—";
@@ -1301,6 +1340,14 @@
         });
         specRow.appendChild(chip);
       });
+      var shadowChip = document.createElement("button");
+      shadowChip.type = "button";
+      shadowChip.className = "spec-toggle shadow" + (u.shadowDivision ? " on" : "");
+      shadowChip.textContent = "Shadow Division";
+      shadowChip.addEventListener("click", function () {
+        db.collection("users").doc(u._id).update({ shadowDivision: !u.shadowDivision });
+      });
+      specRow.appendChild(shadowChip);
       row.appendChild(specRow);
       box.appendChild(row);
     });
