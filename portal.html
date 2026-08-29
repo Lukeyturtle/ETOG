@@ -870,9 +870,63 @@
           <h3><span class="spec-tag">SPEC 05</span>PD Guarding</h3>
           <p class="spec-desc">Elite defensive duty. Holding the PD line against anything that comes at it.</p>
         </div>
-        <div class="card">
-          <h3><span class="spec-tag" style="color: var(--amber);">NO TRYOUT</span>Shadow Division</h3>
-          <p class="spec-desc">The special division for the absolute best at tactical operations, cleared to deploy as civilians. You cannot try out for this — Shadow Operatives are hand-selected by the Head of ETOG.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEC: SHADOW DIVISION (content depends on membership) -->
+  <section class="snap-sec acc-amber tint">
+    <div class="sec-inner">
+      <h2 class="section-title">Shadow Division</h2>
+      <p class="section-sub" id="shadow-sub">// classified — need-to-know basis</p>
+
+      <!-- Non-member teaser -->
+      <div id="shadow-teaser">
+        <p class="cta-text">The Shadow Division exists. That is almost all you get to know. Its operatives are the absolute best at tactical operations, hand-selected personally by the Head of ETOG. There is no tryout and no application. Keep training, keep performing on your shifts — and maybe one day you get the call.</p>
+        <div class="card-grid">
+          <div class="card">
+            <h3><span class="spec-tag" style="color: var(--amber);">REQUIRED</span>Prepare Yourself</h3>
+            <ul class="tac-list">
+              <li><strong>DX Gamepass:</strong> Owning the DX gamepass is required for acceptance. No DX, no Shadow Division.</li>
+              <li><strong>Tactical Excellence:</strong> Selection is based on proven tactical operations skill, not kill counts.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3><span class="spec-tag" style="color: var(--amber);">MANDATORY</span>Division Outfit</h3>
+            <ul class="tac-list">
+              <li>Mountaineering Oxygen Mask</li>
+              <li>FAST-SF Setup #1 Black</li>
+              <li>A-Core XP/LBH, 3m RoTacs V - Green</li>
+              <li>A-Core FAST-SF Helmet Kryptek Typhoon</li>
+              <li>MCam Black Gunfighter Belt</li>
+              <li>MCam Black "MK3" Pouch Setup</li>
+              <li>TRT Blackouts Shirt</li>
+              <li>TRT Blackouts Pants</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Member perks briefing -->
+      <div id="shadow-perks" style="display:none;">
+        <p class="cta-text">Welcome, Shadow Operative. You were chosen. Below is your full briefing — this information does not leave the division.</p>
+        <div class="card-grid">
+          <div class="card">
+            <h3><span class="spec-tag" style="color: var(--amber);">PERKS</span>Your Clearances</h3>
+            <ul class="tac-list">
+              <li><strong>Civilian Deployment:</strong> You are cleared to deploy as a civilian during operations.</li>
+              <li><strong>Neutral Allegiance:</strong> You do not work for the plant, and you do not work for the WN. You are neutral — you work for ETOG and ETOG alone.</li>
+              <li><strong>Tactical Command:</strong> Your role is mostly tactical planning and less combat — though you will still see a fair amount of action.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3><span class="spec-tag" style="color: var(--amber);">PROTOCOL</span>Rules of Engagement</h3>
+            <ul class="tac-list">
+              <li><strong>Loadout:</strong> Most of the time you will carry only a DX. Make every shot count.</li>
+              <li><strong>Mandatory Outfit:</strong> The division outfit (Mountaineering Oxygen Mask, FAST-SF Setup #1 Black, A-Core XP/LBH 3m RoTacs V - Green, A-Core FAST-SF Helmet Kryptek Typhoon, MCam Black Gunfighter Belt, MCam Black "MK3" Pouch Setup, TRT Blackouts Shirt &amp; Pants) must be worn on deployment.</li>
+              <li><strong>Secrecy:</strong> Division perks and operations stay inside the division.</li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -1197,6 +1251,13 @@
     } else {
       divBox.innerHTML = '<span class="empty-note">Standard operations</span>';
     }
+
+    var isShadow = !!myDoc.shadowDivision;
+    $("shadow-teaser").style.display = isShadow ? "none" : "block";
+    $("shadow-perks").style.display = isShadow ? "block" : "none";
+    $("shadow-sub").textContent = isShadow
+      ? "// operative briefing — clearance granted"
+      : "// classified — need-to-know basis";
 
     var joined = "—";
     if (myDoc.createdAt && myDoc.createdAt.toDate) {
