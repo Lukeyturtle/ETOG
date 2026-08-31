@@ -24,6 +24,12 @@ service cloud.firestore {
         && get(/databases/$(database)/documents/shadowStatus/$(request.auth.uid)).data.status == "active";
     }
 
+    // Head of Shadow Division: may accept, promote, and remove operatives.
+    function isShadowHead() {
+      return shadowActive()
+        && get(/databases/$(database)/documents/shadowStatus/$(request.auth.uid)).data.srank == "head";
+    }
+
     // Who may see the real identity behind masked ??? messages.
     function canUnmask() {
       return isAdmin()
@@ -45,11 +51,13 @@ service cloud.firestore {
       allow update, delete: if isAdmin();
     }
 
-    // Shadow Division levels live here so regular members can never read
-    // anyone else's status. Doc id = member uid, field: status.
+    // Shadow Division membership + division rank. Doc id = member uid,
+    // fields: status ("none"|"aware"|"active"), srank ("operative"|"elite"|
+    // "blackops"|"head"). The Head of Shadow Division manages the roster,
+    // but cannot change their own doc (no self-promotion or self-protection).
     match /shadowStatus/{uid} {
-      allow read: if request.auth != null && (request.auth.uid == uid || isAdmin());
-      allow write: if isAdmin();
+      allow read: if request.auth != null && (request.auth.uid == uid || isAdmin() || isShadowHead());
+      allow write: if isAdmin() || (isShadowHead() && request.auth.uid != uid);
     }
 
     function isEliteSoloCommander() {

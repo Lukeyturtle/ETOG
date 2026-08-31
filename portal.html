@@ -1058,7 +1058,7 @@
 
       <!-- Non-member teaser -->
       <div id="shadow-teaser">
-        <p class="cta-text">The Shadow Division exists. That is almost all you get to know. Its operatives are the absolute best at tactical operations, hand-selected personally by the Head of ETOG. There is no tryout and no application. Keep training, keep performing on your shifts — and maybe one day you get the call.</p>
+        <p class="cta-text">The Shadow Division exists. That is almost all you get to know. Its operatives are the absolute best at tactical operations, hand-selected by the Head of ETOG. There is no application — if the division wants you, you get contacted. Keep training, keep performing on your shifts — and maybe one day you get the call.</p>
         <div class="card-grid">
           <div class="card">
             <h3><span class="spec-tag" style="color: var(--amber);">REQUIRED</span>Prepare Yourself</h3>
@@ -1086,26 +1086,38 @@
 
       <!-- Member perks briefing -->
       <div id="shadow-perks" style="display:none;">
-        <p class="cta-text">Welcome, Shadow Operative. You were chosen. Below is your full briefing — this information does not leave the division.</p>
+        <p class="cta-text">Welcome, Shadow Operative. You were chosen. Assignments come from the Head of ETOG — and only the Head of ETOG. You may deploy at any time, but only within the operations your division rank clears you for. This briefing does not leave the division.</p>
+
+        <div class="card" id="shadow-rank-card" style="margin-bottom: 20px;"></div>
+
         <div class="card-grid">
+          <div class="card" id="shadow-teams-card"></div>
+          <div class="card" id="shadow-ops-card"></div>
+        </div>
+
+        <div class="card-grid" style="margin-top: 20px;">
           <div class="card">
-            <h3><span class="spec-tag" style="color: var(--amber);">PERKS</span>Your Clearances</h3>
+            <h3><span class="spec-tag" style="color: var(--amber);">ARMORY</span>Approved Loadouts</h3>
             <ul class="tac-list">
-              <li><strong>Civilian Deployment:</strong> You are cleared to deploy as a civilian during operations.</li>
-              <li><strong>Neutral Allegiance:</strong> You do not work for the plant, and you do not work for the WN. You are neutral — you work for ETOG and ETOG alone.</li>
-              <li><strong>Tactical Command:</strong> Your role is mostly tactical planning and less combat — though you will still see a fair amount of action.</li>
-              <li><strong>Masked Identity:</strong> In rank and group chats you appear as <strong>???</strong>. Only the Head of ETOG, the Head of Solo Operations, and fellow Shadow Operatives can see who you really are.</li>
+              <li><strong>Civilian:</strong> DX only. Make every shot count.</li>
+              <li><strong>GSP:</strong> T24 Matchbox, T29 Springbolt, DX 21, DA 21, any special.</li>
+              <li><strong>SOC:</strong> D23 Spectre, M&uuml;nzwurf, M19 Suppressed, any special.</li>
+              <li><strong>1SFA:</strong> BR177S, M80AMR, Model 17, any special.</li>
+              <li><strong>FRR:</strong> T-3 Suppressed, M19 Suppressed, any special.</li>
             </ul>
           </div>
           <div class="card">
             <h3><span class="spec-tag" style="color: var(--amber);">PROTOCOL</span>Rules of Engagement</h3>
             <ul class="tac-list">
-              <li><strong>Loadout:</strong> Most of the time you will carry only a DX. Make every shot count.</li>
-              <li><strong>Mandatory Outfit:</strong> The division outfit (Mountaineering Oxygen Mask, FAST-SF Setup #1 Black, A-Core XP/LBH 3m RoTacs V - Green, A-Core FAST-SF Helmet Kryptek Typhoon, MCam Black Gunfighter Belt, MCam Black "MK3" Pouch Setup, TRT Blackouts Shirt &amp; Pants) must be worn on deployment.</li>
-              <li><strong>Secrecy:</strong> Division perks and operations stay inside the division.</li>
+              <li><strong>Neutral Allegiance:</strong> You do not work for the plant, and you do not work for the WN. You are neutral — you work for ETOG and ETOG alone.</li>
+              <li><strong>Masked Identity:</strong> In rank and group chats you appear as <strong>???</strong>. Only the Head of ETOG, the Head of Solo Operations, and fellow Shadow Operatives can see who you really are.</li>
+              <li><strong>Mandatory Outfit:</strong> On Civilian deployments the division outfit (Mountaineering Oxygen Mask, FAST-SF Setup #1 Black, A-Core XP/LBH 3m RoTacs V - Green, A-Core FAST-SF Helmet Kryptek Typhoon, MCam Black Gunfighter Belt, MCam Black "MK3" Pouch Setup, TRT Blackouts Shirt &amp; Pants) must be worn.</li>
+              <li><strong>Secrecy:</strong> Division ranks, teams, and operations stay inside the division.</li>
             </ul>
           </div>
         </div>
+
+        <div id="shadow-mgmt" style="display:none; margin-top: 20px;"></div>
       </div>
     </div>
   </section>
@@ -1299,6 +1311,36 @@
     "Operator",
     "Recruit"
   ];
+  var SHADOW_RANKS = [
+    { key: "operative", name: "Operative" },
+    { key: "elite", name: "Elite Operative" },
+    { key: "blackops", name: "Black-Ops Operative" },
+    { key: "head", name: "Head of Shadow Division" }
+  ];
+  var SHADOW_TEAMS_ALL = ["Civilian", "GSP", "SOC", "1SFA", "FRR"];
+  var SHADOW_TEAMS_BY_RANK = {
+    operative: ["Civilian"],
+    elite: ["Civilian", "GSP"],
+    blackops: ["Civilian", "GSP", "SOC", "1SFA", "FRR"],
+    head: ["Civilian", "GSP", "SOC", "1SFA", "FRR"]
+  };
+  var SHADOW_OPS = [
+    { name: "Spy for either the Facility or the WN", min: "operative" },
+    { name: "Go against the Facility", min: "operative" },
+    { name: "Defend the Facility", min: "elite" },
+    { name: "Defend / Attack the Port", min: "blackops" }
+  ];
+  function shadowRankIndex(key) {
+    for (var i = 0; i < SHADOW_RANKS.length; i++) { if (SHADOW_RANKS[i].key === key) return i; }
+    return 0;
+  }
+  function shadowRankName(key) {
+    for (var i = 0; i < SHADOW_RANKS.length; i++) { if (SHADOW_RANKS[i].key === key) return SHADOW_RANKS[i].name; }
+    return "Operative";
+  }
+  var myShadowRank = "operative";
+  var shadowRankMap = {};
+
   var DIVISION_KEYS = ["medical", "heavy", "corporate", "justice"];
   var DIVISION_LABELS = { medical: "MED", heavy: "HVY", corporate: "CORP", justice: "JUS" };
   var myDivisions = { medical: "none", heavy: "none", corporate: "none", justice: "none" };
@@ -1509,6 +1551,7 @@
       }
       myDoc = snap.data();
       myShadow = (shadowSnap && shadowSnap.exists) ? (shadowSnap.data().status || "none") : shadowStatusOf(myDoc);
+      myShadowRank = (shadowSnap && shadowSnap.exists && shadowSnap.data().srank) || "operative";
       if (myDoc.banned) {
         $("hold-icon").textContent = "⛔";
         $("hold-title").textContent = "Access Revoked";
@@ -1588,6 +1631,7 @@
     $("shadow-sub").textContent = (shadow === "active")
       ? "// operative briefing — clearance granted"
       : "// classified — need-to-know basis";
+    if (shadow === "active") renderShadowMember();
 
     renderDivisions();
 
@@ -1627,7 +1671,11 @@
     }, function () {}));
     shadowMapUnsub = db.collection("shadowStatus").onSnapshot(function (qs) {
       shadowMap = {};
-      qs.forEach(function (d) { shadowMap[d.id] = d.data().status; });
+      shadowRankMap = {};
+      qs.forEach(function (d) {
+        shadowMap[d.id] = d.data().status;
+        shadowRankMap[d.id] = d.data().srank || "operative";
+      });
       if (latestRoster) renderRoster(latestRoster);
     }, function () { /* before rules update this collection may be unreadable */ });
     rosterUnsub = db.collection("users").orderBy("usernameLower").onSnapshot(function (qs) {
@@ -1815,9 +1863,23 @@
             return;
           }
         }
-        db.collection("shadowStatus").doc(u._id).set({ status: shadowSel.value });
+        db.collection("shadowStatus").doc(u._id).set({ status: shadowSel.value }, { merge: true });
       });
       specRow.appendChild(shadowSel);
+
+      var srankSel = document.createElement("select");
+      srankSel.className = "rank-select shadow-select";
+      SHADOW_RANKS.forEach(function (r) {
+        var o = document.createElement("option");
+        o.value = r.key;
+        o.textContent = r.name;
+        if ((shadowRankMap[u._id] || "operative") === r.key) o.selected = true;
+        srankSel.appendChild(o);
+      });
+      srankSel.addEventListener("change", function () {
+        db.collection("shadowStatus").doc(u._id).set({ srank: srankSel.value }, { merge: true });
+      });
+      specRow.appendChild(srankSel);
 
       DIVISION_KEYS.forEach(function (k) {
         var dl = document.createElement("span");
@@ -1843,6 +1905,189 @@
 
       row.appendChild(specRow);
       box.appendChild(row);
+    });
+  }
+
+  /* ---------------- SHADOW DIVISION: RANKS / TEAMS / OPS ---------------- */
+  function renderShadowMember() {
+    var myIdx = shadowRankIndex(myShadowRank);
+
+    // Rank ladder
+    var rc = $("shadow-rank-card");
+    rc.innerHTML = "";
+    var rh = document.createElement("h3");
+    rh.innerHTML = '<span class="spec-tag" style="color: var(--amber);">DIVISION RANK</span>' + shadowRankName(myShadowRank);
+    rc.appendChild(rh);
+    var ladder = document.createElement("div");
+    ladder.className = "rank-row";
+    SHADOW_RANKS.forEach(function (r, i) {
+      var chip = document.createElement("span");
+      chip.className = "rank-chip";
+      chip.textContent = r.name;
+      if (r.key === myShadowRank) {
+        chip.style.borderColor = "rgba(255, 179, 71, 0.7)";
+        chip.style.color = "var(--amber)";
+        chip.style.boxShadow = "0 0 14px rgba(255, 179, 71, 0.2)";
+        chip.style.fontWeight = "700";
+      } else {
+        chip.style.opacity = i < myIdx ? "0.75" : "0.45";
+        chip.style.color = "var(--text-sub)";
+      }
+      ladder.appendChild(chip);
+    });
+    rc.appendChild(ladder);
+    var note = document.createElement("p");
+    note.className = "rank-desc";
+    note.style.marginTop = "10px";
+    note.textContent = "Promotions are decided by the Head of ETOG and the Head of Shadow Division, who also hosts division tryouts.";
+    rc.appendChild(note);
+
+    // Teams
+    var myTeams = SHADOW_TEAMS_BY_RANK[myShadowRank] || ["Civilian"];
+    var tc = $("shadow-teams-card");
+    tc.innerHTML = '<h3><span class="spec-tag" style="color: var(--amber);">DEPLOYMENT</span>Teams You Can Deploy As</h3>';
+    var tl = document.createElement("ul");
+    tl.className = "tac-list";
+    SHADOW_TEAMS_ALL.forEach(function (t) {
+      var li = document.createElement("li");
+      var ok = myTeams.indexOf(t) !== -1;
+      li.innerHTML = "<strong>" + t + ":</strong> " + (ok ? "Cleared." : "🔒 Locked — requires a higher division rank.");
+      if (!ok) li.style.opacity = "0.55";
+      tl.appendChild(li);
+    });
+    tc.appendChild(tl);
+    if (myShadowRank === "head") {
+      var anyNote = document.createElement("p");
+      anyNote.className = "rank-desc";
+      anyNote.style.marginTop = "8px";
+      anyNote.textContent = "As Head of Shadow Division you may deploy as any team.";
+      tc.appendChild(anyNote);
+    }
+
+    // Operations
+    var oc = $("shadow-ops-card");
+    oc.innerHTML = '<h3><span class="spec-tag" style="color: var(--amber);">OPERATIONS</span>Cleared Operations</h3>';
+    var ol = document.createElement("ul");
+    ol.className = "tac-list";
+    SHADOW_OPS.forEach(function (op) {
+      var li = document.createElement("li");
+      var ok = myIdx >= shadowRankIndex(op.min);
+      var gate = op.min === "operative" ? "All ranks" : shadowRankName(op.min) + "+";
+      li.innerHTML = "<strong>" + op.name + ":</strong> " + (ok ? "Cleared. " : "🔒 Locked. ") + "(" + gate + ")";
+      if (!ok) li.style.opacity = "0.55";
+      ol.appendChild(li);
+    });
+    oc.appendChild(ol);
+
+    // Head of Shadow Division management panel
+    if (myShadowRank === "head" || myDoc.admin) {
+      $("shadow-mgmt").style.display = "block";
+      renderShadowMgmt();
+    } else {
+      $("shadow-mgmt").style.display = "none";
+    }
+  }
+
+  function renderShadowMgmt() {
+    var box = $("shadow-mgmt");
+    box.innerHTML = '<div class="card"><h3><span class="spec-tag" style="color: var(--amber);">COMMAND</span>Division Command</h3><p class="empty-note">Loading&#8230;</p></div>';
+    Promise.all([
+      db.collection("users").get(),
+      db.collection("shadowStatus").get()
+    ]).then(function (res) {
+      var users = [];
+      res[0].forEach(function (d) { var u = d.data(); u._id = d.id; users.push(u); });
+      var statuses = {};
+      res[1].forEach(function (d) { statuses[d.id] = d.data(); });
+
+      var card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = '<h3><span class="spec-tag" style="color: var(--amber);">COMMAND</span>Division Command</h3><p class="rank-desc" style="margin-bottom:14px;">Accept new operatives after a tryout, set division ranks, or remove members. Only you and the Head of ETOG ever see this list.</p>';
+
+      var members = users.filter(function (u) { return statuses[u._id] && statuses[u._id].status === "active"; });
+      if (!members.length) {
+        var none = document.createElement("p");
+        none.className = "empty-note";
+        none.textContent = "No operatives in the division yet.";
+        card.appendChild(none);
+      }
+      members.forEach(function (u) {
+        var row = document.createElement("div");
+        row.className = "user-row";
+        var main = document.createElement("div");
+        main.className = "user-main";
+        var name = document.createElement("span");
+        name.className = "user-name";
+        name.textContent = u.username;
+        main.appendChild(name);
+        var controls = document.createElement("div");
+        controls.className = "user-controls";
+        var sel = document.createElement("select");
+        sel.className = "rank-select shadow-select";
+        SHADOW_RANKS.forEach(function (r) {
+          var o = document.createElement("option");
+          o.value = r.key;
+          o.textContent = r.name;
+          if ((statuses[u._id].srank || "operative") === r.key) o.selected = true;
+          sel.appendChild(o);
+        });
+        sel.addEventListener("change", function () {
+          db.collection("shadowStatus").doc(u._id).set({ srank: sel.value }, { merge: true })
+            .catch(function () { window.alert("Change failed — are the latest Firestore rules published?"); });
+        });
+        controls.appendChild(sel);
+        controls.appendChild(rowButton("Remove", "danger", function () {
+          if (window.confirm("Remove " + u.username + " from the Shadow Division?")) {
+            db.collection("shadowStatus").doc(u._id).set({ status: "none", srank: "operative" }).then(renderShadowMgmt);
+          }
+        }));
+        main.appendChild(controls);
+        row.appendChild(main);
+        card.appendChild(row);
+      });
+
+      var pickLabel = document.createElement("p");
+      pickLabel.className = "comms-side-label";
+      pickLabel.textContent = "Accept After a Passed Tryout";
+      card.appendChild(pickLabel);
+      var pick = document.createElement("select");
+      pick.className = "rank-select";
+      var def = document.createElement("option");
+      def.value = "";
+      def.textContent = "Choose an operative…";
+      pick.appendChild(def);
+      users.filter(function (u) {
+        var s = statuses[u._id];
+        return u.verified && !u.banned && u.rank !== "Recruit" && (!s || s.status !== "active") && u._id !== auth.currentUser.uid;
+      }).forEach(function (u) {
+        var o = document.createElement("option");
+        o.value = u._id;
+        o.textContent = u.username + " (" + u.rank + ")";
+        pick.appendChild(o);
+      });
+      var accept = rowButton("Accept into Division", "approve", function () {
+        if (!pick.value) return;
+        var target = users.filter(function (u) { return u._id === pick.value; })[0];
+        if (target && SOLO_ROUTE.indexOf(target.rank) === -1) {
+          if (!window.confirm(target.username + " is not on the Solo Operations route (rank: " + target.rank + "). Accept anyway?")) return;
+        }
+        db.collection("shadowStatus").doc(pick.value).set({ status: "active", srank: "operative" }, { merge: true })
+          .then(renderShadowMgmt)
+          .catch(function () { window.alert("Accept failed — are the latest Firestore rules published?"); });
+      });
+      var rowWrap = document.createElement("div");
+      rowWrap.style.display = "flex";
+      rowWrap.style.alignItems = "center";
+      rowWrap.style.flexWrap = "wrap";
+      rowWrap.style.gap = "8px";
+      rowWrap.appendChild(pick);
+      rowWrap.appendChild(accept);
+      card.appendChild(rowWrap);
+
+      box.innerHTML = "";
+      box.appendChild(card);
+    }).catch(function () {
+      box.innerHTML = '<div class="card"><p class="empty-note">Could not load Division Command (are the latest Firestore rules published?).</p></div>';
     });
   }
 
@@ -2583,6 +2828,7 @@
       teardownComms();
       myDoc = null;
       myShadow = "none";
+      myShadowRank = "operative";
       myDivisions = { medical: "none", heavy: "none", corporate: "none", justice: "none" };
       myMedRequest = null;
       route();
